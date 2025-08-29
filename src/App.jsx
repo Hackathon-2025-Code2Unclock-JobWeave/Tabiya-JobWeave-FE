@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import SelectionPage from "./pages/SelectionPage";
 import ResultsPage from "./pages/ResultsPage";
-import SkillSelector from "./pages/SkillSelector";
 
 function App() {
   return (
