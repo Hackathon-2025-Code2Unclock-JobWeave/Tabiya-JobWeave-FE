@@ -1,17 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import SelectionPage from "./pages/SelectionPage";
-import ResultsPage from "./pages/ResultsPage";
+// JobWeave-FE/src/App.js
+import React from "react";
+import SkillsGapAnalyzerApp from "./SkillGapAnalyzer";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/select" element={<SelectionPage />} />
-        <Route path="/results" element={<ResultsPage />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <SkillsGapAnalyzerApp />
+    </div>
   );
 }
 
