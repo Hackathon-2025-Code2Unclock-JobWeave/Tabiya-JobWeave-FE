@@ -406,12 +406,13 @@ const Dashboard = ({ userSkills, analysisResults }) => {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-8">
+      {/* <div className="bg-gradient-to-r from-green-600 to-gray-400 text-gray-800 rounded-lg p-8"> */}
+      <div className="bg-green-600  text-gray-800 rounded-lg p-8">
         <div className="max-w-3xl">
           <h2 className="text-3xl font-bold mb-4">
-            Welcome to Skills Gap Analyzer
+            Welcome to Skills Gap Analyzer/JobWeave
           </h2>
-          <p className="text-lg text-blue-100 mb-6">
+          <p className="text-lg text-white mb-6">
             Discover the shortest path from your current skills to your dream
             career. Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills
             and 3,000+ occupations.
@@ -465,7 +466,7 @@ const Dashboard = ({ userSkills, analysisResults }) => {
           <div className="text-2xl font-bold text-gray-900">
             {userSkills.length}
           </div>
-          <div className="text-gray-600">Your Skills</div>
+          <div className="text-gray-600">№ Your Skills</div>
         </div>
       </div>
 
@@ -669,7 +670,9 @@ const GapAnalysisResults = ({ results }) => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center space-x-2 mb-4">
             <AlertCircle className="text-red-600" size={20} />
-            <h3 className="text-lg font-bold">Skills You Need</h3>
+            <h3 className="text-lg font-bold">
+              Skills You Need/Missing skills
+            </h3>
             <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">
               {gapAnalysis.skillsCounts.missingSkills}
             </span>
@@ -732,7 +735,7 @@ const GapAnalysisResults = ({ results }) => {
                 Top Priority Skills:
               </h4>
               <div className="grid gap-2">
-                {learningPath.priorities.slice(0, 4).map((skill, index) => (
+                {learningPath.priorities.slice(0, 5).map((skill, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
@@ -900,7 +903,7 @@ const SkillsExplorer = () => {
           <Search className="absolute left-3 top-3 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="Search skills or categories..."
+            placeholder="👈🏿Search skills or categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
