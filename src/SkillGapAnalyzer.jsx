@@ -381,8 +381,8 @@ const Dashboard = ({ userSkills, analysisResults }) => {
     const fetchData = async () => {
       try {
         const [statsResponse, healthResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/statistics`),
-          fetch(`${API_BASE_URL}/health`),
+          fetch(`${API_BASE_URL}/api/statistics`),
+          fetch(`${API_BASE_URL}/api/health`),
         ]);
 
         const stats = await statsResponse.json();
