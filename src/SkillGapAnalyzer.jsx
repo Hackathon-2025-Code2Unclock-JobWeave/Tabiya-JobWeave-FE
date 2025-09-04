@@ -1195,71 +1195,6 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
   //  PROVIDER FUNCTIONS
   // =====================
 
-  // Coursera
-  const fetchCoursera = async (skillName) => {
-    const response = await fetch(
-      `https://api.coursera.org/api/courses.v1?q=search&query=${encodeURIComponent(
-        skillName
-      )}&limit=5&fields=slug,name,description,photoUrl,partnerIds`
-    );
-    const data = await response.json();
-
-    return (data?.elements || []).map((course) => ({
-      title: course.name,
-      type: "course",
-      provider: "Coursera",
-      description: course.description || "",
-      level: "All levels",
-      price: "Free / Paid",
-      url: `https://www.coursera.org/learn/${course.slug}`,
-    }));
-  };
-
-  // Udemy (requires API key)
-  const fetchUdemy = async (skillName) => {
-    const res = await fetch(
-      `https://www.udemy.com/api-2.0/courses/?search=${encodeURIComponent(
-        skillName
-      )}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.UDEMY_API_KEY}`, // 🔑
-        },
-      }
-    );
-    const data = await res.json();
-
-    return (data?.results || []).map((c) => ({
-      title: c.title,
-      type: "course",
-      provider: "Udemy",
-      description: c.headline || "",
-      level: c.instructional_level || "All levels",
-      price: c.price || "Free / Paid",
-      url: `https://www.udemy.com${c.url}`,
-    }));
-  };
-
-  // YouTube (needs API key)
-  const fetchYouTube = async (skillName) => {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
-        skillName
-      )}&type=video&maxResults=5&key=${process.env.YOUTUBE_API_KEY}` // 🔑
-    );
-    const data = await res.json();
-
-    return (data?.items || []).map((v) => ({
-      title: v.snippet.title,
-      type: "video",
-      provider: "YouTube",
-      description: v.snippet.description,
-      level: "Beginner-Friendly",
-      price: "Free",
-      url: `https://www.youtube.com/watch?v=${v.id.videoId}`,
-    }));
-  };
-
   // Google Books
   const fetchBooks = async (skillName) => {
     const res = await fetch(
@@ -1280,15 +1215,34 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
     }));
   };
 
+  // YouTube
+  const fetchYouTube = async (skillName) => {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+        skillName
+      )}&type=video&maxResults=5&key=${import.meta.env.VITE_YOUTUBE_API_KEY}` // 🔑
+    );
+    const data = await res.json();
+
+    return (data?.items || []).map((v) => ({
+      title: v.snippet.title,
+      type: "video",
+      provider: "YouTube",
+      description: v.snippet.description,
+      level: "Beginner-Friendly",
+      price: "Free",
+      url: `https://www.youtube.com/watch?v=${v.id.videoId}`,
+    }));
+  };
+
   // AI Fallback (OpenAI GPT)
-  // You’ll need: process.env.OPENAI_API_KEY
   const fetchAIRecommendations = async (skillName) => {
     try {
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // 🔑
+          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // 🔑
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
@@ -1309,7 +1263,6 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       const data = await res.json();
       const text = data.choices?.[0]?.message?.content || "";
 
-      // Very simple parsing (AI will output a markdown list we can split)
       return text
         .split("\n")
         .filter(Boolean)
@@ -1336,7 +1289,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
     setIsLoading(true);
     setResources([]);
 
-    const providers = [fetchCoursera, fetchUdemy, fetchYouTube, fetchBooks];
+    const providers = [fetchYouTube, fetchBooks];
 
     let allResults = [];
 
@@ -1664,7 +1617,7 @@ const SimilarOccupations = ({ userSkills }) => {
                   Next steps:
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {occupation.nextSteps.slice(0, 3).map((step, stepIndex) => (
+                  {occupation.nextSteps.slice(0, 5).map((step, stepIndex) => (
                     <span
                       key={stepIndex}
                       className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
@@ -1698,6 +1651,7 @@ const SkillsGapAnalyzerApp = () => {
     { id: "pathway", label: "Career Pathway", icon: TrendingUp },
     { id: "resources", label: "Learning Resources", icon: BookOpen },
     { id: "explorer", label: "Skills Explorer", icon: Search },
+    { id: "similar", label: "Similar Occupations", icon: Users },
   ];
 
   const performAnalysis = async () => {
@@ -1861,6 +1815,10 @@ const SkillsGapAnalyzerApp = () => {
           />
         )}
 
+        {activeView === "similar" && (
+          <SimilarOccupations userSkills={userSkills} />
+        )}
+
         {activeView === "analyzer" && (
           <div className="space-y-8">
             {/* Analysis Form */}
@@ -2000,14 +1958,6 @@ const SkillsGapAnalyzerApp = () => {
             missingSkills={analysisResults?.gapAnalysis.missingSkills || []}
           />
         )}
-
-        {activeView === "export" && (
-          <ExportShare
-            analysisResults={analysisResults}
-            userSkills={userSkills}
-            targetOccupation={targetOccupation}
-          />
-        )}
       </main>
 
       {/* Footer */}
@@ -2111,7 +2061,7 @@ const SkillsGapAnalyzerApp = () => {
       {/* Connection Status */}
       <div className="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 flex items-center space-x-2 text-sm z-30">
         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span className="text-gray-600">Connected to Tabiya API</span>
+        <span className="text-gray-600">Tabiya-LogicHub RP-Kigali College</span>
       </div>
     </div>
   );
