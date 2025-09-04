@@ -26,6 +26,7 @@ import {
   HelpCircle,
   Star,
   Zap,
+  Bold,
 } from "lucide-react";
 
 const API_BASE_URL =
@@ -183,7 +184,7 @@ const SkillInput = ({
         setIsLoading(true);
         try {
           const response = await apiCall(
-            `/skills?q=${encodeURIComponent(debouncedInput)}&limit=8`
+            `/skills?q=${encodeURIComponent(debouncedInput)}&limit=20`
           );
           setSuggestions(response.skills || []);
         } catch (error) {
@@ -305,7 +306,7 @@ const OccupationSearch = ({
         setIsLoading(true);
         try {
           const response = await apiCall(
-            `/occupations?q=${encodeURIComponent(debouncedInput)}&limit=8`
+            `/occupations?q=${encodeURIComponent(debouncedInput)}&limit=20`
           );
           setSuggestions(response.occupations || []);
         } catch (error) {
@@ -381,8 +382,8 @@ const Dashboard = ({ userSkills, analysisResults }) => {
     const fetchData = async () => {
       try {
         const [statsResponse, healthResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/statistics`),
-          fetch(`${API_BASE_URL}/api/health`),
+          fetch(`${API_BASE_URL}/statistics`),
+          fetch(`${API_BASE_URL}/health`),
         ]);
 
         const stats = await statsResponse.json();
@@ -406,68 +407,14 @@ const Dashboard = ({ userSkills, analysisResults }) => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      {/* <div className="bg-gradient-to-r from-green-600 to-gray-400 text-gray-800 rounded-lg p-8"> */}
-      <div className="bg-green-600  text-gray-800 rounded-lg p-8">
-        <div className="max-w-3xl">
-          <h2 className="text-3xl font-bold mb-4">
-            Welcome to Skills Gap Analyzer/JobWeave
-          </h2>
-          <p className="text-lg text-white mb-6">
-            Discover the shortest path from your current skills to your dream
-            career. Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills
-            and 3,000+ occupations.
-          </p>
-          <div className="flex items-center space-x-6 text-blue-100">
-            <div className="flex items-center space-x-2">
-              <CheckCircle size={20} />
-              <span>Skills Gap Analysis</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <TrendingUp size={20} />
-              <span>Career Pathways</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <BookOpen size={20} />
-              <span>Learning Resources</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <BookOpen className="mx-auto text-blue-600 mb-3" size={32} />
-          <div className="text-2xl font-bold text-gray-900">
-            {statistics?.counts.skills.toLocaleString() || "14K+"}
-          </div>
-          <div className="text-gray-600">Skills</div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <Briefcase className="mx-auto text-green-600 mb-3" size={32} />
-          <div className="text-2xl font-bold text-gray-900">
-            {statistics?.counts.occupations.toLocaleString() || "3K+"}
-          </div>
-          <div className="text-gray-600">Occupations</div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <TrendingUp className="mx-auto text-purple-600 mb-3" size={32} />
-          <div className="text-2xl font-bold text-gray-900">
-            {statistics?.counts.skillOccupationRelations.toLocaleString() ||
-              "130K+"}
-          </div>
-          <div className="text-gray-600">Connections</div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+      <div>
+        <div className="bg-white rounded-lg shadow-md p-6 text-center w-full">
           <Users className="mx-auto text-orange-600 mb-3" size={32} />
           <div className="text-2xl font-bold text-gray-900">
-            {userSkills.length}
+            {userSkills.length ? userSkills.length : "Analyze your skill first"}
           </div>
-          <div className="text-gray-600">№ Your Skills</div>
+          <div className="text-gray-600">Your Skills</div>
         </div>
       </div>
 
@@ -904,7 +851,7 @@ const SkillsExplorer = () => {
           <Search className="absolute left-3 top-3 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="👈🏿Search skills or categories..."
+            placeholder="Search skills or categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -928,7 +875,7 @@ const SkillsExplorer = () => {
                     onClick={() => toggleSkillSelection(skill)}
                     className="ml-1 hover:bg-blue-200 rounded"
                   >
-                    <X size={12} />
+                    <X size={12} color="red" fontWeight="Bold" />
                   </button>
                 </span>
               ))}
@@ -1244,61 +1191,174 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
   const [resources, setResources] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // =====================
+  //  PROVIDER FUNCTIONS
+  // =====================
+
+  // Coursera
+  const fetchCoursera = async (skillName) => {
+    const response = await fetch(
+      `https://api.coursera.org/api/courses.v1?q=search&query=${encodeURIComponent(
+        skillName
+      )}&limit=5&fields=slug,name,description,photoUrl,partnerIds`
+    );
+    const data = await response.json();
+
+    return (data?.elements || []).map((course) => ({
+      title: course.name,
+      type: "course",
+      provider: "Coursera",
+      description: course.description || "",
+      level: "All levels",
+      price: "Free / Paid",
+      url: `https://www.coursera.org/learn/${course.slug}`,
+    }));
+  };
+
+  // Udemy (requires API key)
+  const fetchUdemy = async (skillName) => {
+    const res = await fetch(
+      `https://www.udemy.com/api-2.0/courses/?search=${encodeURIComponent(
+        skillName
+      )}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.UDEMY_API_KEY}`, // 🔑
+        },
+      }
+    );
+    const data = await res.json();
+
+    return (data?.results || []).map((c) => ({
+      title: c.title,
+      type: "course",
+      provider: "Udemy",
+      description: c.headline || "",
+      level: c.instructional_level || "All levels",
+      price: c.price || "Free / Paid",
+      url: `https://www.udemy.com${c.url}`,
+    }));
+  };
+
+  // YouTube (needs API key)
+  const fetchYouTube = async (skillName) => {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+        skillName
+      )}&type=video&maxResults=5&key=${process.env.YOUTUBE_API_KEY}` // 🔑
+    );
+    const data = await res.json();
+
+    return (data?.items || []).map((v) => ({
+      title: v.snippet.title,
+      type: "video",
+      provider: "YouTube",
+      description: v.snippet.description,
+      level: "Beginner-Friendly",
+      price: "Free",
+      url: `https://www.youtube.com/watch?v=${v.id.videoId}`,
+    }));
+  };
+
+  // Google Books
+  const fetchBooks = async (skillName) => {
+    const res = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+        skillName
+      )}`
+    );
+    const data = await res.json();
+
+    return (data?.items || []).map((b) => ({
+      title: b.volumeInfo.title,
+      type: "book",
+      provider: "Google Books",
+      description: b.volumeInfo.description || "",
+      level: "All levels",
+      price: "Free / Paid",
+      url: b.volumeInfo.infoLink,
+    }));
+  };
+
+  // AI Fallback (OpenAI GPT)
+  // You’ll need: process.env.OPENAI_API_KEY
+  const fetchAIRecommendations = async (skillName) => {
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // 🔑
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a helpful assistant that suggests learning resources (courses, books, videos, docs).",
+            },
+            {
+              role: "user",
+              content: `Suggest 5 learning resources for skill: ${skillName}. Include title, type (course/book/video), provider, description, url.`,
+            },
+          ],
+        }),
+      });
+
+      const data = await res.json();
+      const text = data.choices?.[0]?.message?.content || "";
+
+      // Very simple parsing (AI will output a markdown list we can split)
+      return text
+        .split("\n")
+        .filter(Boolean)
+        .map((line) => ({
+          title: line,
+          type: "resource",
+          provider: "AI Recommendation",
+          description: "",
+          level: "All levels",
+          price: "Free / Paid",
+          url: "",
+        }));
+    } catch (err) {
+      console.error("AI fallback failed:", err);
+      return [];
+    }
+  };
+
+  // =====================
+  //  MASTER FUNCTION
+  // =====================
+
   const searchResources = async (skillName) => {
     setIsLoading(true);
+    setResources([]);
 
-    // Mock learning resources (in production, integrate with external APIs)
-    setTimeout(() => {
-      const mockResources = [
-        {
-          title: `Master ${skillName} - Comprehensive Course`,
-          type: "course",
-          provider: "TechEd Pro",
-          duration: "6-8 weeks",
-          level: "Beginner to Advanced",
-          rating: 4.8,
-          students: "12,500+",
-          price: "Free",
-          url: "#",
-        },
-        {
-          title: `${skillName} Professional Certification`,
-          type: "certification",
-          provider: "Industry Institute",
-          duration: "10-12 weeks",
-          level: "Professional",
-          rating: 4.6,
-          students: "8,200+",
-          price: "$299",
-          url: "#",
-        },
-        {
-          title: `${skillName} Practical Tutorial Series`,
-          type: "tutorial",
-          provider: "DevTube",
-          duration: "3-4 weeks",
-          level: "Beginner",
-          rating: 4.5,
-          students: "25,000+",
-          price: "Free",
-          url: "#",
-        },
-        {
-          title: `Advanced ${skillName} Workshop`,
-          type: "workshop",
-          provider: "SkillBoost Academy",
-          duration: "2 days",
-          level: "Advanced",
-          rating: 4.9,
-          students: "1,500+",
-          price: "$199",
-          url: "#",
-        },
-      ];
+    const providers = [fetchCoursera, fetchUdemy, fetchYouTube, fetchBooks];
 
-      setResources(mockResources);
-      setIsLoading(false);
-    }, 1000);
+    let allResults = [];
+
+    for (const provider of providers) {
+      try {
+        const results = await provider(skillName);
+        if (results?.length) {
+          allResults = [...allResults, ...results];
+        }
+      } catch (err) {
+        console.error(`Error in ${provider.name}:`, err);
+      }
+    }
+
+    // 🔥 AI fallback if no results found
+    if (allResults.length === 0) {
+      const aiResults = await fetchAIRecommendations(skillName);
+      allResults = aiResults;
+    }
+
+    setResources(allResults);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -1326,7 +1386,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       </div>
     );
   }
-
+  console.log("missingSkills:", missingSkills);
   return (
     <div className="space-y-6">
       {/* Skill Selection */}
@@ -1341,17 +1401,18 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
             Select a skill to find learning resources:
           </label>
           <select
-            value={selectedSkill?.ID || ""}
+            value={selectedSkill?.id || ""}
             onChange={(e) => {
-              const skill = missingSkills.find((s) => s.ID === e.target.value);
+              const skill = missingSkills.find((s) => s.id === e.target.value);
               setSelectedSkill(skill);
             }}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Choose a skill to learn...</option>
             {missingSkills.map((skill) => (
-              <option key={skill.ID} value={skill.ID}>
-                {skill.PREFERREDLABEL} ({skill.priority || "optional"})
+              <option key={skill.id} value={skill.id}>
+                {skill.PREFERREDLABEL || skill.name || "Unknown"} (
+                {skill.priority || "optional"})
               </option>
             ))}
           </select>
@@ -1378,132 +1439,80 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       {selectedSkill && (
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h4 className="text-lg font-semibold mb-4">
-            Learning Resources for "{selectedSkill.PREFERREDLABEL}"
+            Learning Resources for "
+            {selectedSkill.PREFERREDLABEL || selectedSkill.name}"
           </h4>
 
           {isLoading ? (
             <LoadingSpinner text="Finding learning resources..." />
           ) : (
             <div className="space-y-4">
-              {resources.map((resource, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-grow">
-                      <h5 className="font-semibold text-lg mb-1">
-                        {resource.title}
-                      </h5>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <span className="flex items-center space-x-1">
-                          <Users size={14} />
-                          <span>{resource.provider}</span>
+              {resources.length > 0 ? (
+                resources.map((resource, index) => (
+                  <div
+                    key={index}
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-grow">
+                        <h5 className="font-semibold text-lg mb-1">
+                          {resource.title}
+                        </h5>
+                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+                          <span className="flex items-center space-x-1">
+                            <Users size={14} />
+                            <span>{resource.provider}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <Clock size={14} />
+                            <span>{resource.duration}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <Star size={14} />
+                            <span>{resource.rating}/5</span>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end space-y-2">
+                        <span className="px-2 py-1 text-xs rounded-full font-medium bg-blue-100 text-blue-800">
+                          {resource.type}
                         </span>
-                        <span className="flex items-center space-x-1">
-                          <Clock size={14} />
-                          <span>{resource.duration}</span>
-                        </span>
-                        <span className="flex items-center space-x-1">
-                          <Star size={14} />
-                          <span>{resource.rating}/5</span>
+                        <span
+                          className={`text-sm font-medium ${
+                            resource.price === "Free"
+                              ? "text-green-600"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {resource.price}
                         </span>
                       </div>
                     </div>
-
-                    <div className="flex flex-col items-end space-y-2">
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full font-medium ${
-                          resource.type === "course"
-                            ? "bg-blue-100 text-blue-800"
-                            : resource.type === "certification"
-                            ? "bg-green-100 text-green-800"
-                            : resource.type === "workshop"
-                            ? "bg-purple-100 text-purple-800"
-                            : "bg-orange-100 text-orange-800"
-                        }`}
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-gray-500">
+                        Perfect for{" "}
+                        {selectedSkill.priority === "critical"
+                          ? "essential"
+                          : "optional"}{" "}
+                        skill development
+                      </div>
+                      <a
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
-                        {resource.type}
-                      </span>
-                      <span
-                        className={`text-sm font-medium ${
-                          resource.price === "Free"
-                            ? "text-green-600"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {resource.price}
-                      </span>
+                        <ExternalLink size={14} />
+                        <span>View Course</span>
+                      </a>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-3">
-                    <div>
-                      <span className="font-medium text-gray-700">Level: </span>
-                      <span>{resource.level}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-700">
-                        Students:{" "}
-                      </span>
-                      <span>{resource.students}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-700">
-                        Rating:{" "}
-                      </span>
-                      <span className="text-yellow-600">
-                        {resource.rating}/5 ⭐
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs text-gray-500">
-                      Perfect for{" "}
-                      {selectedSkill.priority === "critical"
-                        ? "essential"
-                        : "optional"}{" "}
-                      skill development
-                    </div>
-                    <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm font-medium">
-                      <ExternalLink size={14} />
-                      <span>View Course</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Learning Tips */}
-              <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div className="flex items-start space-x-2">
-                  <Lightbulb
-                    className="text-yellow-600 flex-shrink-0"
-                    size={20}
-                  />
-                  <div>
-                    <div className="font-medium text-yellow-800 mb-1">
-                      Learning Strategy Tips
-                    </div>
-                    <ul className="text-yellow-700 text-sm space-y-1">
-                      <li>
-                        • Focus on critical skills first - they're essential for
-                        the role
-                      </li>
-                      <li>
-                        • Combine theoretical learning with hands-on practice
-                      </li>
-                      <li>
-                        • Build a portfolio project that demonstrates this skill
-                      </li>
-                      <li>
-                        • Join professional communities to network and learn
-                      </li>
-                      <li>• Consider finding a mentor in your target field</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">
+                  No resources found for this skill.
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -1687,7 +1696,7 @@ const ExportShare = ({ analysisResults, userSkills, targetOccupation }) => {
       targetOccupation,
       analysis: analysisResults,
       metadata: {
-        toolUsed: "Skills Gap Analyzer",
+        toolUsed: "JobWeave",
         challenge: "Tabiya Hackathon Challenge 2",
         version: "1.0.0",
       },
@@ -1750,7 +1759,7 @@ Readiness Score: ${analysisResults.gapAnalysis.readinessScore}%
 Skills Matched: ${analysisResults.skillMatching.totalMatched}
 Skills to Learn: ${analysisResults.gapAnalysis.skillsCounts.missingSkills}
 
-Generated by Skills Gap Analyzer - Tabiya Hackathon Challenge 2`;
+Generated by JobWeave - Tabiya Hackathon Challenge 2`;
 
     if (navigator.share) {
       try {
@@ -1923,7 +1932,7 @@ Generated by Skills Gap Analyzer - Tabiya Hackathon Challenge 2`;
 
 // Main App Component
 const SkillsGapAnalyzerApp = () => {
-  const [activeView, setActiveView] = useState("dashboard");
+  const [activeView, setActiveView] = useState("analyzer");
   const [userSkills, setUserSkills] = useState([]);
   const [targetOccupation, setTargetOccupation] = useState("");
   const [analysisResults, setAnalysisResults] = useState(null);
@@ -1932,8 +1941,8 @@ const SkillsGapAnalyzerApp = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const views = [
-    { id: "dashboard", label: "Dashboard", icon: BarChart3 },
     { id: "analyzer", label: "Gap Analyzer", icon: Target },
+    { id: "dashboard", label: "Current Status", icon: BarChart3 },
     { id: "explorer", label: "Skills Explorer", icon: Search },
     { id: "pathway", label: "Career Pathway", icon: TrendingUp },
     { id: "resources", label: "Learning Resources", icon: BookOpen },
@@ -1990,9 +1999,7 @@ const SkillsGapAnalyzerApp = () => {
                 <Target className="text-white" size={28} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Skills Gap Analyzer
-                </h1>
+                <h1 className="text-2xl font-bold text-gray-900">JobWeave</h1>
                 <p className="text-gray-600">
                   Find your path from skills to career success
                 </p>
@@ -2259,7 +2266,7 @@ const SkillsGapAnalyzerApp = () => {
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
                 <Target size={24} />
-                <span className="text-xl font-bold">Skills Gap Analyzer</span>
+                <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
                 Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
@@ -2323,10 +2330,7 @@ const SkillsGapAnalyzerApp = () => {
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>
-              &copy; 2025 Skills Gap Analyzer. Built for Tabiya Hackathon
-              Challenge 2.
-            </p>
+            <p>&copy; 2025 JobWeave. Built for Tabiya Hackathon Challenge 2.</p>
             <p className="text-sm mt-2">
               Empowering career development through data-driven insights.
             </p>
