@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   Search,
   Target,
@@ -1696,6 +1697,7 @@ const SkillsGapAnalyzerApp = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
+
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -1720,8 +1722,22 @@ const SkillsGapAnalyzerApp = () => {
                   </div>
                 </div>
               )}
-
-              <Button variant="outline" onClick={clearAll} size="sm">
+              <ul>
+                <li>
+                  <a
+                    href="#home"
+                    className="border text-gray-950 justify-between object-center font-bold border-gray-600 rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-gray-700"
+                  >
+                    <Link to={"/"}>Return Home</Link>
+                  </a>
+                </li>
+              </ul>
+              <Button
+                variant="outline"
+                className="py-1.5 px-7   hover:text-gray-100 hover:bg-red-700 font-bold"
+                onClick={clearAll}
+                size="sm"
+              >
                 Clear All
               </Button>
             </div>
