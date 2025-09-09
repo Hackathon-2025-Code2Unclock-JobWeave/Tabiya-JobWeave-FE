@@ -15,16 +15,20 @@ const LandingPage = () => {
             
           </a> */}
           <a href="#" className="flex items-center text-xl font-bold">
-        <img
-             src="/Screenshot 2025-09-08 201718.png"alt="Logo" className="size-14 mr-3 bg-green-500"/>
-         <div className="flex flex-col">22
-         <span>Job Weave</span>
-         <p className="text-sm font-normal text-gray-600">
-           Find your path from skills to career success
-        </p>
-               </div>
-            </a>
-           <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
+            <img
+              src="/Screenshot 2025-09-08 201718.png"
+              alt="Logo"
+              className="size-14 mr-3 bg-green-500"
+            />
+            <div className="flex flex-col">
+              22
+              <span>Job Weave</span>
+              <p className="text-sm font-normal text-gray-600">
+                Find your path from skills to career success
+              </p>
+            </div>
+          </a>
+          <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
             <li>
               <a
                 href="#home"
@@ -76,7 +80,7 @@ const LandingPage = () => {
               <span className="text-green-600">Dream Career</span>
             </h1>
             <p className="mt-6 text-lg text-gray-600">
-              Turn your skills into a career. PathFinder guides you from today's
+              Turn your skills into a career. Job Weave guides you from today's
               skills to tomorrow's job.
             </p>
             <div className="mt-6 flex space-x-4">
@@ -108,13 +112,12 @@ const LandingPage = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8 items-center">
             <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <div className="flex items-center space-x-2 mb-4">
-                <span className="text-2xl">⚠️</span>
-                <h3 className="font-semibold text-lg">Barriers On Your Path</h3>
-              </div>
               <p className="text-gray-600">
-                Many people can't find decent jobs and aren’t sure where their
-                skills fit best or how to grow into new opportunities.
+                <img
+                  src="/images/barriers.png"
+                  alt="Barriers"
+                  className="rotate-90 w-43 h-41"
+                />
               </p>
             </div>
 
@@ -140,7 +143,7 @@ const LandingPage = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto text-center px-6 overflow-hidden">
           <h2 className="text-3xl font-bold mb-4 animate-marquee whitespace-nowrap">
-            Let PathFinder Bridge Your Career Gap
+            Let Job Weave Bridge Your Career Gap
           </h2>
           <p className="text-gray-600 mb-12">
             Built on the world's most comprehensive skills and occupation
@@ -191,10 +194,13 @@ const LandingPage = () => {
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
                 {/* <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-6 w-6"/> */}
-                <img src="/Screenshot 2025-09-08 201718.png" alt="Logo"
-                       className="h-6 w-6 bg-transparent"/>
+                <img
+                  src="/Screenshot 2025-09-08 201718.png"
+                  alt="Logo"
+                  className="h-6 w-6 bg-transparent"
+                />
 
-              <span className="text-xl font-bold">JobWeave</span>
+                <span className="text-xl font-bold">JobWeave</span>
               </div>
 
               <p className="text-gray-400 mb-4">
