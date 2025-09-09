@@ -1,65 +1,65 @@
 import { Target, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const LandingPage = () => {
+  // Slider settings
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 800,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+  };
+
   return (
     <div className="font-inter text-gray-900">
       {/* Navigation */}
-      <nav className="bg-white shadow fixed w-full z-50 ">
+      <nav className="bg-white shadow fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-          {/* <a href="#" className="flex items-center text-xl font-bold">
-            <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-8 w-8 mr-3" />
-            Job Weave <br />
-            <p className="mt-6 ml-2  text-gray-600">
-            Find your path from skills to career success</p>
-            
-          </a> */}
           <a href="#" className="flex items-center text-xl font-bold">
-        <img
-             src="/Screenshot 2025-09-08 201718.png"alt="Logo" className="size-14 mr-3 bg-green-500"/>
-         <div className="flex flex-col">
-         <span>Job Weave</span>
-         <p className="text-sm font-normal text-gray-600">
-           Find your path from skills to career success
-        </p>
-               </div>
-            </a>
-           <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
+            <img
+              src="/images/Screenshot 2025-09-08 201718.png"
+              alt="Logo"
+              className="size-10 mr-3 rounded bg-green-600"
+            />
+            <div className="flex flex-col">
+              <span>Job Weave</span>
+              <p className="text-sm font-normal text-gray-600">
+                From Skills → Career Success
+              </p>
+            </div>
+          </a>
+          <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
             <li>
-              <a
-                href="#home"
-                className="relative after:block after:h-[8px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
+              <a href="#home" className="hover:text-green-700">
                 Home
               </a>
             </li>
             <li>
-              <Link
-                to="/skillgapanalyser"
-                className="navbar__link relative after:absolute after:left-0 after:bottom-0 after:h-[5px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
+              <Link to="/skillgapanalyser" className="hover:text-green-700">
                 Find My Career
               </Link>
             </li>
             <li>
-              <a
-                href="#about"
-                className="relative after:block after:h-[8px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
+              <a href="#about" className="hover:text-green-700">
                 About Us
               </a>
             </li>
             <li>
-              <a
-                href="#contact"
-                className="bg-green-600 px-8 py-3 rounded-lg text-white"
-              >
-                Contact Us
+              <a href="#contact" className="hover:text-green-700">
+                Contact
               </a>
             </li>
             <li>
-              <a href="#help" className="hover:text-gray-900">
-                Help ?
+              <a href="#help" className="hover:text-green-700">
+                Help?
               </a>
             </li>
           </ul>
@@ -67,144 +67,231 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="bg-gray-50 py-20">
+      <section id="home" className="bg-gray-50 pt-28 pb-20">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
-          <div>
-            <h1 className="text-5xl font-bold leading-tight">
-              Map Your Skills <br />
-              to Your <br />
-              <span className="text-green-600">Dream Career</span>
+          {/* Left Text */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-5xl font-extrabold leading-tight">
+              Map Your Skills <br /> To Your <br />
+              <span className="text-green-900">Dream Career</span>
             </h1>
             <p className="mt-6 text-lg text-gray-600">
-              Turn your skills into a career. PathFinder guides you from today's
-              skills to tomorrow's job.
+              Job Weave helps you turn today’s skills into tomorrow’s success 🚀
             </p>
             <div className="mt-6 flex space-x-4">
-              <a className="px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
-                <Link to="/skillgapanalyser" className="navbar__link">
-                  Get Started
-                </Link>
-              </a>
-
+              <Link
+                to="/skillgapanalyser"
+                className="px-6 py-3 bg-green-800 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+              >
+                Get Started
+              </Link>
               <a
                 href="#learn-more"
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+                className="px-6 py-3 border border-gray-300 font-semibold text-gray-700 rounded-lg hover:bg-gray-100 transition"
               >
                 Learn More
               </a>
             </div>
-          </div>
-          <div>
-            <img src="/images/meta.png" alt="Illustration" className="w-full" />
-          </div>
+          </motion.div>
+
+          {/* Right Image Slider */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Slider
+              {...sliderSettings}
+              className="rounded-2xl overflow-hidden shadow-lg"
+            >
+              {[1, 2, 3, 4].map((num) => (
+                <div key={num}>
+                  <img
+                    src={`public/images/image_fx (${num}).jpg`}
+                    alt={`slide-${num}`}
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
+              ))}
+            </Slider>
+          </motion.div>
         </div>
       </section>
 
-      {/* Barriers Section */}
+      {/* Problem → Solution Section */}
       <section className="py-20 bg-white">
-        <div className="max-w-5xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold mb-12">
-            From Barriers to <br /> Breakthroughs
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 items-center">
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <div className="flex items-center space-x-2 mb-4">
-                <span className="text-2xl">⚠️</span>
-                <h3 className="font-semibold text-lg">Barriers On Your Path</h3>
-              </div>
-              <p className="text-gray-600">
-                Many people can't find decent jobs and aren’t sure where their
-                skills fit best or how to grow into new opportunities.
-              </p>
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
+          {/* PROBLEM */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-gray-50 p-6 rounded-lg shadow"
+          >
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="text-2xl">🚧</span>
+              <h3 className="font-semibold text-lg">The Challenge</h3>
             </div>
+            <p className="text-gray-600">
+              Many workers struggle to connect their current skills with real
+              career opportunities.
+            </p>
+          </motion.div>
 
-            <div className="flex justify-center items-center text-4xl text-gray-400">
-              →
+          {/* SOLUTION */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-gray-50 p-6 rounded-lg shadow"
+          >
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="text-2xl">⚡</span>
+              <h3 className="font-semibold text-lg">The Solution</h3>
             </div>
+            <p className="text-gray-600">
+              Job Weave highlights your missing skills, suggests stepping-stone
+              roles, and connects you with learning to grow faster.
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <div className="flex items-center space-x-2 mb-4">
-                <span className="text-2xl">⚡</span>
-                <h3 className="font-semibold text-lg">Solution</h3>
-              </div>
-              <p className="text-gray-600">
-                PathFinder maps your skills to jobs and career opportunities,
-                showing your best match to a dream career.
-              </p>
+      {/* Challenge 2 Section */}
+      <section
+        id="challenge2"
+        className="py-20 bg-gradient-to-b from-white to-gray-50"
+      >
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
+          {/* RIGHT - SLIDER */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Slider
+              {...sliderSettings}
+              className="rounded-2xl overflow-hidden shadow-lg"
+            >
+              {[2, 3, 4].map((num) => (
+                <div key={num}>
+                  <img
+                    src={`public/images/image_fx (${num}).jpg`}
+                    alt={`challenge-slide-${num}`}
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
+              ))}
+            </Slider>
+          </motion.div>
+          {/* LEFT - TEXT */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl font-bold mb-6">
+              Challenge 2:{" "}
+              <span className="text-green-700">Skills Gap Analyzer</span>
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Find the shortest path from the skills you have to the job you
+              want. Identify missing skills, explore steppingstone roles, and
+              discover learning resources — powered by Tabiya’s taxonomy.
+            </p>
+
+            <div className="space-y-6">
+              {[
+                {
+                  icon: "🧩",
+                  title: "Identify Missing Skills",
+                  desc: "Compare your skills with a target occupation.",
+                },
+                {
+                  icon: "🛤️",
+                  title: "Suggest Pathways",
+                  desc: "Discover stepping-stone roles to grow faster.",
+                },
+                {
+                  icon: "📚",
+                  title: "Find Training",
+                  desc: "Get course recommendations to close your skill gaps.",
+                },
+              ].map((step, i) => (
+                <motion.div
+                  key={i}
+                  className="flex items-start space-x-4"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span className="text-2xl">{step.icon}</span>
+                  <div>
+                    <h3 className="font-semibold text-lg">{step.title}</h3>
+                    <p className="text-gray-600 text-sm">{step.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Bridge Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto text-center px-6 overflow-hidden">
-          <h2 className="text-3xl font-bold mb-4 animate-marquee whitespace-nowrap">
-            Let PathFinder Bridge Your Career Gap
+          <h2 className="text-3xl font-bold mb-4">
+            Let Job Weave Bridge Your Career Gap
           </h2>
           <p className="text-gray-600 mb-12">
-            Built on the world's most comprehensive skills and occupation
-            taxonomy
+            Built on the world’s most comprehensive skills + occupation taxonomy
           </p>
-
-          <div className="flex justify-center gap-5 p-5 text-white animate-slide">
-            <div className="bg-white p-6 rounded-lg shadow animate-bounce">
-              <div className="text-3xl mb-2">🎯</div>
-              <h3 className="font-semibold text-lg">Precise Matching</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                3,000+ occupations and 14,000+ skills ensure accurate career
-                mapping
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow animate-bounce delay-200">
-              <div className="text-3xl mb-2">⚡</div>
-              <h3 className="font-semibold text-lg">Fastest Path</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                AI-powered recommendations for the most efficient skill
-                development
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow animate-bounce delay-600">
-              <div className="text-3xl mb-2">🌟</div>
-              <h3 className="font-semibold text-lg">Inclusive Recognition</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                Values both formal and informal work experience and capabilities
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: "🎯",
+                title: "Precise Matching",
+                desc: "3,000+ jobs and 14,000+ skills ensure accurate career mapping",
+              },
+              {
+                icon: "⚡",
+                title: "Fastest Path",
+                desc: "Smart recommendations for efficient skill growth",
+              },
+              {
+                icon: "🌟",
+                title: "Inclusive Recognition",
+                desc: "We value both formal & informal experience",
+              },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ y: -10 }}
+                className="bg-white p-6 rounded-lg shadow"
+              >
+                <div className="text-3xl mb-2">{item.icon}</div>
+                <h3 className="font-semibold text-lg">{item.title}</h3>
+                <p className="text-gray-600 mt-2 text-sm">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      {/* <section className="py-20 bg-green-600 text-center text-white">
-        <h2 className="text-4xl font-bold">
-          Ready to Map Your <br /> Career Journey?
-        </h2>
-      </section> */}
-
-      {/* Footer (from JobWeave) */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                {/* <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-6 w-6"/> */}
-                <img src="/Screenshot 2025-09-08 201718.png" alt="Logo"
-                       className="h-6 w-6 bg-transparent"/>
-
-              <span className="text-xl font-bold">JobWeave</span>
+                <Target size={24} className="text-green-500" />
+                <span className="text-xl font-bold">JobWeave</span>
               </div>
-
               <p className="text-gray-400 mb-4">
-                Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
-                Inclusive Taxonomy with 14,000+ skills and 3,000+ occupations to
-                help you find the shortest path from your current skills to your
-                dream career.
+                Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills and
+                3,000+ occupations to help you find the shortest path from your
+                current skills to your dream career.
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>Challenge 2</span>
+                <span>Tabiya Challenge 2</span>
                 <span>•</span>
                 <span>React + Express.js</span>
                 <span>•</span>
@@ -214,12 +301,10 @@ const LandingPage = () => {
 
             <div>
               <h4 className="text-lg font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Skills gap analysis with AI-powered matching</li>
+              <ul className="text-gray-400 text-sm space-y-2">
                 <li>Career pathway planning with stepping stones</li>
-                <li>14,000+ skills taxonomy exploration</li>
                 <li>Learning resource recommendations</li>
-                <li>Export and share analysis results</li>
+                <li>14,000+ skills taxonomy exploration</li>
                 <li>Real-time occupation and skill search</li>
               </ul>
             </div>
@@ -232,8 +317,7 @@ const LandingPage = () => {
                     href="https://explorer.tabiya.org/"
                     className="hover:text-white flex items-center space-x-1"
                   >
-                    <ExternalLink size={12} />
-                    <span>Tabiya Taxonomy Explorer</span>
+                    <ExternalLink size={12} /> <span>Tabiya Explorer</span>
                   </a>
                 </li>
                 <li>
@@ -241,8 +325,7 @@ const LandingPage = () => {
                     href="https://docs.tabiya.org/"
                     className="hover:text-white flex items-center space-x-1"
                   >
-                    <ExternalLink size={12} />
-                    <span>Documentation</span>
+                    <ExternalLink size={12} /> <span>Documentation</span>
                   </a>
                 </li>
                 <li>
@@ -250,26 +333,22 @@ const LandingPage = () => {
                     href="https://github.com/tabiya-tech/"
                     className="hover:text-white flex items-center space-x-1"
                   >
-                    <ExternalLink size={12} />
-                    <span>GitHub Repository</span>
+                    <ExternalLink size={12} /> <span>GitHub Repository</span>
                   </a>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 JobWeave. Built for Tabiya Hackathon Challenge 2.</p>
-            <p className="text-sm mt-2">
-              Empowering career development through data-driven insights.
+          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400">
+            <p>
+              &copy; 2025 JobWeave. Built for Tabiya Hackathon Tabiya Challenge
+              2.
             </p>
+            <article className="pt-8 pb-4 font-bold text-white text-lg">
+              The Gym
+            </article>
           </div>
-        </div>
-        <div className="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 flex items-center space-x-2 text-sm z-30">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-gray-600">
-            Tabiya-LogicHub RP-Kigali College
-          </span>
         </div>
       </footer>
     </div>

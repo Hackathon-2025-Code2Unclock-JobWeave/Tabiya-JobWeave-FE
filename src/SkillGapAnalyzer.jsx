@@ -250,7 +250,7 @@ const SkillInput = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
-          className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
         />
 
         {(suggestions.length > 0 || isLoading) && (
@@ -350,7 +350,7 @@ const OccupationSearch = ({
           onChange(e.target.value);
         }}
         placeholder={placeholder}
-        className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-900 focus:border-transparent"
       />
 
       {(suggestions.length > 0 || isLoading) && (
@@ -413,7 +413,7 @@ const Dashboard = ({ userSkills, analysisResults }) => {
   }, []);
 
   if (isLoading) {
-    return <LoadingSpinner text="Loading dashboard..." />;
+    return <LoadingSpinner text="Loading Status..." />;
   }
 
   // Prepare chart data
@@ -580,7 +580,7 @@ const GapAnalysisResults = ({ results }) => {
   return (
     <div className="space-y-8">
       {/* Target Occupation Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6">
+      <div className="bg-green-700 text-white rounded-lg p-6">
         <div className="flex items-center space-x-3 mb-3">
           <Target size={28} />
           <h2 className="text-2xl font-bold">Analysis Results</h2>
@@ -689,19 +689,14 @@ const GapAnalysisResults = ({ results }) => {
             <h3 className="text-lg font-bold">Learning Path</h3>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
+          <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {learningPath.totalSkillsToLearn}
               </div>
               <div className="text-sm text-gray-600">Skills to Learn</div>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
-                {learningPath.estimatedTime}
-              </div>
-              <div className="text-sm text-gray-600">Estimated Time</div>
-            </div>
+
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
                 {learningPath.priorities?.length || 0}
@@ -1243,7 +1238,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       provider: "Google Books",
       description: b.volumeInfo.description || "",
       level: "All levels",
-      price: "Free / Paid",
+      price: "Free",
       url: b.volumeInfo.infoLink,
     }));
   };
@@ -1305,7 +1300,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
           provider: "AI Recommendation",
           description: "",
           level: "All levels",
-          price: "Free / Paid",
+          price: "Free",
           url: "",
         }));
     } catch (err) {
@@ -1735,11 +1730,11 @@ const SkillsGapAnalyzerApp = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="bg-gradient-to-r  bg-green-600 p-3 rounded-xl">
-                <Target className="text-white" size={28} />
+                <Target className="text-white" size={20} />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">JobWeave</h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 ">
                   Find your path from skills to career success
                 </p>
               </div>
@@ -1758,9 +1753,9 @@ const SkillsGapAnalyzerApp = () => {
                 <li>
                   <a
                     href="#home"
-                    className="border  font-medium text-black border-gray-400  rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-green-900 "
+                    className="border font-mono  text-black border-gray-400  rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-green-900 "
                   >
-                    <Link to={"/"}>Return Home</Link>
+                    <Link to={"/"}>Back Home</Link>
                   </a>
                 </li>
               </ul>
@@ -1794,7 +1789,7 @@ const SkillsGapAnalyzerApp = () => {
                     onClick={() => setActiveView(view.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeView === view.id
-                        ? "bg-white text-blue-600 shadow-sm"
+                        ? "bg-green-200 text-gray-900 shadow-sm"
                         : "text-gray-600 hover:text-gray-900"
                     }`}
                   >
@@ -1913,7 +1908,7 @@ const SkillsGapAnalyzerApp = () => {
                       userSkills.length === 0 ||
                       !targetOccupation.trim()
                     }
-                    className="w-64 flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400"
+                    className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-700"
                     size="md"
                   >
                     {isAnalyzing ? (
@@ -1932,31 +1927,35 @@ const SkillsGapAnalyzerApp = () => {
 
                 {/* Right Column - Quick Stats */}
                 <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-gray-200 rounded-lg">
                     <h4 className="font-medium text-blue-900 mb-2">
                       Ready to Analyze
                     </h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center justify-between">
-                        <span className="text-blue-700">Skills Added:</span>
-                        <span className="font-medium text-blue-900">
+                        <span className="text-gray-700 font-semibold">
+                          Skills Added:
+                        </span>
+                        <span className="font-medium text-gray-900">
                           {userSkills.length}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-blue-700">Target Set:</span>
-                        <span className="font-medium text-blue-900">
+                        <span className="text-gray-700 font-semibold ">
+                          Target Set:
+                        </span>
+                        <span className="font-medium text-gray-900">
                           {targetOccupation ? "Yes" : "No"}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h4 className="font-medium text-green-900 mb-2">
+                  <div className="p-4 bg-gray-200 rounded-lg">
+                    <h4 className="font-medium text-blue-900 mb-2">
                       What You'll Get
                     </h4>
-                    <ul className="space-y-1 text-sm text-green-700">
+                    <ul className="space-y-1 text-sm text-gray-700 font-semibold">
                       <li>• Detailed readiness assessment</li>
                       <li>• Skills you have vs. skills needed</li>
                       <li>• Learning priorities and timeline</li>
@@ -2009,22 +2008,21 @@ const SkillsGapAnalyzerApp = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-10 ">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
                 <Target size={24} className="text-green-500" />
                 <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
-                Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
-                Inclusive Taxonomy with 14,000+ skills and 3,000+ occupations to
-                help you find the shortest path from your current skills to your
-                dream career.
+                Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills and
+                3,000+ occupations to help you find the shortest path from your
+                current skills to your dream career.
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>Challenge 2</span>
+                <span>Tabiya Challenge 2</span>
                 <span>•</span>
                 <span>React + Express.js</span>
                 <span>•</span>
@@ -2034,12 +2032,10 @@ const SkillsGapAnalyzerApp = () => {
 
             <div>
               <h4 className="text-lg font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Skills gap analysis with AI-powered matching</li>
+              <ul className=" text-gray-400 text-sm space-y-2">
                 <li>Career pathway planning with stepping stones</li>
-                <li>14,000+ skills taxonomy exploration</li>
                 <li>Learning resource recommendations</li>
-                <li>Export and share analysis results</li>
+                <li>14,000+ skills taxonomy exploration</li>
                 <li>Real-time occupation and skill search</li>
               </ul>
             </div>
@@ -2078,11 +2074,15 @@ const SkillsGapAnalyzerApp = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 JobWeave. Built for Tabiya Hackathon Challenge 2.</p>
-            <p className="text-sm mt-2">
-              Empowering career development through data-driven insights.
+          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400">
+            <p>
+              &copy; 2025 JobWeave. Built for Tabiya Hackathon Tabiay Challenge
+              2.
             </p>
+
+            <article className="pt-8 pb-4 font-bold text-white text-lg ">
+              The Gym
+            </article>
           </div>
         </div>
       </footer>
@@ -2094,7 +2094,7 @@ const SkillsGapAnalyzerApp = () => {
             onClick={performAnalysis}
             disabled={isAnalyzing}
             className="shadow-lg flex items-center space-x-2"
-            size="lg"
+            size="md"
           >
             {isAnalyzing ? (
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
