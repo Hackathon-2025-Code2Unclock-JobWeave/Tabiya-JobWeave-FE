@@ -1701,7 +1701,7 @@ const SkillsGapAnalyzerApp = () => {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
                 <Target className="text-white" size={28} />
               </div>
@@ -1711,19 +1711,7 @@ const SkillsGapAnalyzerApp = () => {
                   Find your path from skills to career success
                 </p>
               </div>
-            </div> */}
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r bg-green-500 bg-green-500 p-3 rounded-xl">
-              <Target className=" text-white" size={28} />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">JobWeave</h1>
-             <p className="text-gray-600">
-               Find your path from skills to career success
-                 </p>
-            </div>
-</div>
-
 
             <div className="hidden md:flex items-center space-x-4">
               {analysisResults && (
@@ -2016,6 +2004,7 @@ const SkillsGapAnalyzerApp = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
+
               <div className="flex items-center space-x-2 mb-4">
                   <Target size={24} className="text-green-500" />
                   <span className="text-xl font-bold">JobWeave</span>
