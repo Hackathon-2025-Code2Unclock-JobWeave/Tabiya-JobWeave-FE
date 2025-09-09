@@ -103,8 +103,7 @@ const Button = ({
   className = "",
 }) => {
   const variants = {
-    primary:
-      "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700",
+    primary: "bg-green-700 text-white hover:from-blue-700 hover:to-purple-700",
     secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
     outline: "border border-gray-300 text-gray-700 hover:bg-gray-50",
     success: "bg-green-600 text-white hover:bg-green-700",
@@ -251,7 +250,7 @@ const SkillInput = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
 
         {(suggestions.length > 0 || isLoading) && (
@@ -351,7 +350,7 @@ const OccupationSearch = ({
           onChange(e.target.value);
         }}
         placeholder={placeholder}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
 
       {(suggestions.length > 0 || isLoading) && (
@@ -1886,7 +1885,7 @@ const SkillsGapAnalyzerApp = () => {
                       onSkillsChange={setUserSkills}
                       placeholder="Type skills like 'JavaScript', 'Project Management'..."
                     />
-                    <p className="text-sm text-gray-500 mt-2">
+                    <p className="hidden  text-sm text-gray-500 mt-2">
                       Add all your relevant skills. We'll match them against
                       14,000+ skills in the taxonomy.
                     </p>
@@ -1901,21 +1900,21 @@ const SkillsGapAnalyzerApp = () => {
                       onChange={setTargetOccupation}
                       placeholder="Search for your target job..."
                     />
-                    <p className="text-sm text-gray-500 mt-2">
+                    <p className="hidden text-sm text-gray-500 mt-2">
                       Enter the occupation you want to transition to or advance
                       in.
                     </p>
                   </div>
 
-                  {/* <Button
+                  <Button
                     onClick={performAnalysis}
                     disabled={
                       isAnalyzing ||
                       userSkills.length === 0 ||
                       !targetOccupation.trim()
                     }
-                    className="w-full flex items-center justify-center space-x-2"
-                    size="lg"
+                    className="w-64 flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400"
+                    size="md"
                   >
                     {isAnalyzing ? (
                       <>
@@ -1925,33 +1924,10 @@ const SkillsGapAnalyzerApp = () => {
                     ) : (
                       <>
                         <BarChart3 size={20} />
-                        <span className="text-green-500">Analyze Skills Gap</span>
-
+                        <span>Analyze Skills Gap</span>
                       </>
                     )}
-                  </Button> */}
-                  <Button
-                       onClick={performAnalysis}
-                         disabled={
-                        isAnalyzing ||
-                       userSkills.length === 0 ||
-                         !targetOccupation.trim()
-                        }
-                             className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400"
-                          size="lg">
-                            {isAnalyzing ? (
-                            <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                               <span>Analyzing Skills Gap...</span>
-                             </>
-                               ) : (
-                            <>
-                               <BarChart3 size={20} />
-                              <span>Analyze Skills Gap</span>
-                       </>
-                        )}
-                 </Button>
-
+                  </Button>
                 </div>
 
                 {/* Right Column - Quick Stats */}
@@ -2037,10 +2013,9 @@ const SkillsGapAnalyzerApp = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
-
               <div className="flex items-center space-x-2 mb-4">
-                  <Target size={24} className="text-green-500" />
-                  <span className="text-xl font-bold">JobWeave</span>
+                <Target size={24} className="text-green-500" />
+                <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
                 Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
