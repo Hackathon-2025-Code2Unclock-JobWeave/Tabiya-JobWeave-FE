@@ -1,6 +1,5 @@
 import { Target, ExternalLink } from "lucide-react";
-import { Link } from "react-router-dom";
-
+import { Link } from "react-router-dom"
 const LandingPage = () => {
   return (
     <div className="font-inter text-gray-900">
@@ -16,7 +15,7 @@ const LandingPage = () => {
           </a> */}
           <a href="#" className="flex items-center text-xl font-bold">
             <img
-              src="/Screenshot 2025-09-08 201718.png"
+              src="Screenshot 2025-09-08 201718.png"
               alt="Logo"
               className="size-14 mr-3 bg-green-500"
             />
@@ -194,7 +193,7 @@ const LandingPage = () => {
               <div className="flex items-center space-x-2 mb-4">
                 {/* <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-6 w-6"/> */}
                 <img
-                  src="/Screenshot 2025-09-08 201718.png"
+                  src="./images/Screenshot 2025-09-08 211359 copy.png"
                   alt="Logo"
                   className="h-6 w-6 bg-transparent"
                 />
