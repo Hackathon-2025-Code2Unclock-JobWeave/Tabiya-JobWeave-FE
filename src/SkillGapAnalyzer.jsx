@@ -1654,6 +1654,8 @@ const SkillsGapAnalyzerApp = () => {
     { id: "explorer", label: "Skills Explorer", icon: Search },
     { id: "similar", label: "Similar Occupations", icon: Users },
   ];
+  
+
 
   const performAnalysis = async () => {
     if (userSkills.length === 0 || !targetOccupation.trim()) {
@@ -1728,7 +1730,7 @@ const SkillsGapAnalyzerApp = () => {
                     href="#home"
                     className="border text-gray-950 justify-between object-center font-bold border-gray-600 rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-gray-700"
                   >
-                    <Link to={"/"}>Return Home</Link>
+                    <Link to={"/"}>Back Home</Link>
                   </a>
                 </li>
               </ul>
@@ -2006,7 +2008,7 @@ const SkillsGapAnalyzerApp = () => {
             <div className="md:col-span-2">
 
               <div className="flex items-center space-x-2 mb-4">
-                  <Target size={24} className="text-green-500" />
+                  <Target size={28} className="text-gray-200 bg-green-600" />
                   <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
