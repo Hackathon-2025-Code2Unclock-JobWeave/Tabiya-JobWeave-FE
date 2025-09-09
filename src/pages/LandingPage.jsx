@@ -16,7 +16,7 @@ const LandingPage = () => {
           <a href="#" className="flex items-center text-xl font-bold">
         <img
              src="/Screenshot 2025-09-08 201718.png"alt="Logo" className="size-14 mr-3 bg-green-500"/>
-         <div className="flex flex-col">22
+         <div className="flex flex-col">
          <span>Job Weave</span>
          <p className="text-sm font-normal text-gray-600">
            Find your path from skills to career success

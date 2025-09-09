@@ -1702,7 +1702,7 @@ const SkillsGapAnalyzerApp = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
+              <div className="bg-gradient-to-r  bg-green-600 p-3 rounded-xl">
                 <Target className="text-white" size={28} />
               </div>
               <div>
