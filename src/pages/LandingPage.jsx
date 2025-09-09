@@ -1,10 +1,11 @@
 import { Target, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+
 const LandingPage = () => {
   return (
     <div className="font-inter text-gray-900">
       {/* Navigation */}
-      <nav className="bg-white shadow">
+      <nav className="bg-white shadow fixed w-full z-50 ">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
           <a href="#" className="flex items-center text-xl font-bold">
             <img src="/images/Goal.png" alt="Logo" className="h-8 w-8 mr-3" />
@@ -12,22 +13,34 @@ const LandingPage = () => {
           </a>
           <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
             <li>
-              <a href="#home" className="hover:text-gray-900">
+              <a
+                href="#home"
+                className="relative after:block after:h-[8px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
                 Home
               </a>
             </li>
             <li>
-              <Link to="/skillgapanalyser" className="navbar__link">
+              <Link
+                to="/skillgapanalyser"
+                className="navbar__link relative after:absolute after:left-0 after:bottom-0 after:h-[5px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
                 Find My Career
               </Link>
             </li>
             <li>
-              <a href="#about" className="hover:text-gray-900">
+              <a
+                href="#about"
+                className="relative after:block after:h-[8px] after:w-0 after:bg-green-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
                 About Us
               </a>
             </li>
             <li>
-              <a href="#contact" className="hover:text-gray-900">
+              <a
+                href="#contact"
+                className="bg-green-600 px-8 py-3 rounded-lg text-white"
+              >
                 Contact Us
               </a>
             </li>
@@ -112,8 +125,8 @@ const LandingPage = () => {
 
       {/* Bridge Section */}
       <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold mb-4">
+        <div className="max-w-6xl mx-auto text-center px-6 overflow-hidden">
+          <h2 className="text-3xl font-bold mb-4 animate-marquee whitespace-nowrap">
             Let PathFinder Bridge Your Career Gap
           </h2>
           <p className="text-gray-600 mb-12">
@@ -121,8 +134,8 @@ const LandingPage = () => {
             taxonomy
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex justify-center gap-5 p-5 text-white animate-slide">
+            <div className="bg-white p-6 rounded-lg shadow animate-bounce">
               <div className="text-3xl mb-2">🎯</div>
               <h3 className="font-semibold text-lg">Precise Matching</h3>
               <p className="text-gray-600 mt-2 text-sm">
@@ -130,7 +143,8 @@ const LandingPage = () => {
                 mapping
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+
+            <div className="bg-white p-6 rounded-lg shadow animate-bounce delay-200">
               <div className="text-3xl mb-2">⚡</div>
               <h3 className="font-semibold text-lg">Fastest Path</h3>
               <p className="text-gray-600 mt-2 text-sm">
@@ -138,7 +152,8 @@ const LandingPage = () => {
                 development
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+
+            <div className="bg-white p-6 rounded-lg shadow animate-bounce delay-600">
               <div className="text-3xl mb-2">🌟</div>
               <h3 className="font-semibold text-lg">Inclusive Recognition</h3>
               <p className="text-gray-600 mt-2 text-sm">
