@@ -29,7 +29,17 @@ import {
   Zap,
   Bold,
 } from "lucide-react";
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  Radar,
+} from "recharts";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
@@ -374,6 +384,7 @@ const OccupationSearch = ({
 };
 
 // Dashboard Component
+const COLORS = ["#16a34a", "#dc2626", "#f97316"]; // green, red, orange
 const Dashboard = ({ userSkills, analysisResults }) => {
   const [statistics, setStatistics] = useState(null);
   const [healthStatus, setHealthStatus] = useState(null);
@@ -406,79 +417,101 @@ const Dashboard = ({ userSkills, analysisResults }) => {
     return <LoadingSpinner text="Loading dashboard..." />;
   }
 
+  // Prepare chart data
+  const skillDistribution = [
+    {
+      name: "Skills You Have",
+      value: analysisResults?.gapAnalysis.skillsCounts.hasSkills || 0,
+    },
+    {
+      name: "Critical Missing",
+      value: analysisResults?.gapAnalysis.skillsCounts.criticalMissing || 0,
+    },
+    {
+      name: "Optional Missing",
+      value: analysisResults?.gapAnalysis.skillsCounts.optionalMissing || 0,
+    },
+  ];
+
+  const readinessRadar = [
+    {
+      subject: "Readiness",
+      A: analysisResults?.gapAnalysis.readinessScore || 0,
+    },
+    {
+      subject: "Critical Gaps",
+      A: analysisResults?.gapAnalysis.skillsCounts.criticalMissing || 0,
+    },
+    {
+      subject: "Optional Gaps",
+      A: analysisResults?.gapAnalysis.skillsCounts.optionalMissing || 0,
+    },
+    {
+      subject: "Stepping Stones",
+      A: analysisResults?.careerPathway.steppingStones.length || 0,
+    },
+  ];
+
   return (
     <div className="space-y-8">
-      {/* Quick Stats */}
-      <div>
-        <div className="bg-white rounded-lg shadow-md p-6 text-center w-full">
-          <Users className="mx-auto text-orange-600 mb-3" size={32} />
-          <div className="text-2xl font-bold text-gray-900">
-            {userSkills.length ? userSkills.length : "Analyze your skill first"}
-          </div>
-          <div className="text-gray-600">Your Skills</div>
-        </div>
-      </div>
+      {/* Existing cards here... */}
 
-      {/* Personal Progress */}
+      {/* Graphs Section */}
       {analysisResults && (
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold mb-6">Your Analysis Summary</h3>
+          <h3 className="text-xl font-bold mb-6">Visual Insights</h3>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="font-semibold mb-3">Target Occupation</h4>
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="font-medium text-blue-900">
-                  {analysisResults.targetOccupation.name}
-                </div>
-                <div className="text-blue-700 text-sm">
-                  {analysisResults.targetOccupation.code}
-                </div>
-              </div>
+            {/* Pie Chart */}
+            <div className="h-64">
+              <h4 className="font-semibold mb-3 text-center">
+                Skill Distribution
+              </h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={skillDistribution}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={100}
+                    label
+                  >
+                    {skillDistribution.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-3">Readiness Score</h4>
-              <ProgressBar
-                percentage={analysisResults.gapAnalysis.readinessScore}
-                color={
-                  analysisResults.gapAnalysis.readinessLevel === "high"
-                    ? "green"
-                    : analysisResults.gapAnalysis.readinessLevel === "medium"
-                    ? "yellow"
-                    : "red"
-                }
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="text-center p-3 bg-green-50 rounded">
-              <div className="text-lg font-bold text-green-600">
-                {analysisResults.gapAnalysis.skillsCounts.hasSkills}
-              </div>
-              <div className="text-sm text-gray-600">Skills You Have</div>
-            </div>
-
-            <div className="text-center p-3 bg-red-50 rounded">
-              <div className="text-lg font-bold text-red-600">
-                {analysisResults.gapAnalysis.skillsCounts.criticalMissing}
-              </div>
-              <div className="text-sm text-gray-600">Critical Missing</div>
-            </div>
-
-            <div className="text-center p-3 bg-orange-50 rounded">
-              <div className="text-lg font-bold text-orange-600">
-                {analysisResults.gapAnalysis.skillsCounts.optionalMissing}
-              </div>
-              <div className="text-sm text-gray-600">Optional Missing</div>
-            </div>
-
-            <div className="text-center p-3 bg-purple-50 rounded">
-              <div className="text-lg font-bold text-purple-600">
-                {analysisResults.careerPathway.steppingStones.length}
-              </div>
-              <div className="text-sm text-gray-600">Stepping Stones</div>
+            {/* Radar Chart */}
+            <div className="h-64">
+              <h4 className="font-semibold mb-3 text-center">
+                Career Readiness Overview
+              </h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="80%"
+                  data={readinessRadar}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <Radar
+                    name="Readiness"
+                    dataKey="A"
+                    stroke="#2563eb"
+                    fill="#3b82f6"
+                    fillOpacity={0.6}
+                  />
+                  <Tooltip />
+                </RadarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -1726,7 +1759,7 @@ const SkillsGapAnalyzerApp = () => {
                 <li>
                   <a
                     href="#home"
-                    className="border text-gray-950 justify-between object-center font-bold border-gray-600 rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-gray-700"
+                    className="border  font-medium text-black border-gray-400  rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-green-900 "
                   >
                     <Link to={"/"}>Return Home</Link>
                   </a>
@@ -1734,11 +1767,11 @@ const SkillsGapAnalyzerApp = () => {
               </ul>
               <Button
                 variant="outline"
-                className="py-1.5 px-7   hover:text-gray-100 hover:bg-red-700 font-bold"
+                className="py-1.5 px-1.5   hover:text-gray-100 hover:bg-red-700 font-semibold"
                 onClick={clearAll}
                 size="sm"
               >
-                Clear All
+                Reset Analysis
               </Button>
             </div>
 
