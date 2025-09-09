@@ -1735,7 +1735,7 @@ const SkillsGapAnalyzerApp = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
+              <div className="bg-gradient-to-r  bg-green-600 p-3 rounded-xl">
                 <Target className="text-white" size={28} />
               </div>
               <div>
@@ -1907,7 +1907,7 @@ const SkillsGapAnalyzerApp = () => {
                     </p>
                   </div>
 
-                  <Button
+                  {/* <Button
                     onClick={performAnalysis}
                     disabled={
                       isAnalyzing ||
@@ -1925,10 +1925,33 @@ const SkillsGapAnalyzerApp = () => {
                     ) : (
                       <>
                         <BarChart3 size={20} />
-                        <span>Analyze Skills Gap</span>
+                        <span className="text-green-500">Analyze Skills Gap</span>
+
                       </>
                     )}
-                  </Button>
+                  </Button> */}
+                  <Button
+                       onClick={performAnalysis}
+                         disabled={
+                        isAnalyzing ||
+                       userSkills.length === 0 ||
+                         !targetOccupation.trim()
+                        }
+                             className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400"
+                          size="lg">
+                            {isAnalyzing ? (
+                            <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                               <span>Analyzing Skills Gap...</span>
+                             </>
+                               ) : (
+                            <>
+                               <BarChart3 size={20} />
+                              <span>Analyze Skills Gap</span>
+                       </>
+                        )}
+                 </Button>
+
                 </div>
 
                 {/* Right Column - Quick Stats */}
@@ -2014,9 +2037,10 @@ const SkillsGapAnalyzerApp = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
+
               <div className="flex items-center space-x-2 mb-4">
-                <Target size={24} />
-                <span className="text-xl font-bold">JobWeave</span>
+                  <Target size={24} className="text-green-500" />
+                  <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
                 Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
