@@ -7,11 +7,24 @@ const LandingPage = () => {
       {/* Navigation */}
       <nav className="bg-white shadow fixed w-full z-50 ">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+          {/* <a href="#" className="flex items-center text-xl font-bold">
+            <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-8 w-8 mr-3" />
+            Job Weave <br />
+            <p className="mt-6 ml-2  text-gray-600">
+            Find your path from skills to career success</p>
+            
+          </a> */}
           <a href="#" className="flex items-center text-xl font-bold">
-            <img src="/images/Goal.png" alt="Logo" className="h-8 w-8 mr-3" />
-            PathFinder
-          </a>
-          <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
+        <img
+             src="/Screenshot 2025-09-08 201718.png"alt="Logo" className="size-14 mr-3 bg-green-500"/>
+         <div className="flex flex-col">22
+         <span>Job Weave</span>
+         <p className="text-sm font-normal text-gray-600">
+           Find your path from skills to career success
+        </p>
+               </div>
+            </a>
+           <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
             <li>
               <a
                 href="#home"
@@ -177,9 +190,13 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <Target size={24} />
-                <span className="text-xl font-bold">JobWeave</span>
+                {/* <img src="/Screenshot 2025-09-08 201718.png" alt="Logo" className="h-6 w-6"/> */}
+                <img src="/Screenshot 2025-09-08 201718.png" alt="Logo"
+                       className="h-6 w-6 bg-transparent"/>
+
+              <span className="text-xl font-bold">JobWeave</span>
               </div>
+
               <p className="text-gray-400 mb-4">
                 Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
                 Inclusive Taxonomy with 14,000+ skills and 3,000+ occupations to
