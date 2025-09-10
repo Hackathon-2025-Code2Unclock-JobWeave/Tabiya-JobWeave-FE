@@ -1,4 +1,5 @@
-import { Target, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Target, ExternalLink, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Slider from "react-slick";
@@ -6,6 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const LandingPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   // Slider settings
   const sliderSettings = {
     dots: true,
@@ -32,10 +35,12 @@ const LandingPage = () => {
             <div className="flex flex-col">
               <span>Job Weave</span>
               <p className="text-sm font-normal text-gray-600">
-                From Skills → Career Success
+                Find your path from skills to career success
               </p>
             </div>
           </a>
+
+          {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
             <li>
               <a href="#home" className="hover:text-green-700">
@@ -63,26 +68,55 @@ const LandingPage = () => {
               </a>
             </li>
           </ul>
+
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden text-gray-700"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
+
+        {/* Mobile Dropdown */}
+        {menuOpen && (
+          <div className="md:hidden bg-white shadow px-6 py-4 space-y-4 text-gray-600 font-medium">
+            <a href="#home" className="block hover:text-green-700">
+              Home
+            </a>
+            <Link to="/skillgapanalyser" className="block hover:text-green-700">
+              Find My Career
+            </Link>
+            <a href="#about" className="block hover:text-green-700">
+              About Us
+            </a>
+            <a href="#contact" className="block hover:text-green-700">
+              Contact
+            </a>
+            <a href="#help" className="block hover:text-green-700">
+              Help?
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
       <section id="home" className="bg-gray-50 pt-28 pb-20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-4 sm:px-6">
           {/* Left Text */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-5xl font-extrabold leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
               Map Your Skills <br /> To Your <br />
               <span className="text-green-900">Dream Career</span>
             </h1>
-            <p className="mt-6 text-lg text-gray-600">
-              Job Weave helps you turn today’s skills into tomorrow’s success 🚀
+            <p className="mt-6 text-base sm:text-lg text-gray-600">
+              JobWeave helps you turn today’s skills into tomorrow’s success 🚀
             </p>
-            <div className="mt-6 flex space-x-4">
+            <div className="mt-6 flex flex-wrap gap-4">
               <Link
                 to="/skillgapanalyser"
                 className="px-6 py-3 bg-green-800 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
@@ -113,7 +147,7 @@ const LandingPage = () => {
                   <img
                     src={`public/images/image_fx (${num}).jpg`}
                     alt={`slide-${num}`}
-                    className="w-full h-[400px] object-cover"
+                    className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />
                 </div>
               ))}
@@ -124,7 +158,7 @@ const LandingPage = () => {
 
       {/* Problem → Solution Section */}
       <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-4 sm:px-6">
           {/* PROBLEM */}
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -162,8 +196,8 @@ const LandingPage = () => {
         id="challenge2"
         className="py-20 bg-gradient-to-b from-white to-gray-50"
       >
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
-          {/* RIGHT - SLIDER */}
+        <div className="max-w-7xl mx-auto flex flex-col-reverse md:grid md:grid-cols-2 gap-12 items-center px-4 sm:px-6">
+          {/* SLIDER */}
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -178,21 +212,22 @@ const LandingPage = () => {
                   <img
                     src={`public/images/image_fx (${num}).jpg`}
                     alt={`challenge-slide-${num}`}
-                    className="w-full h-[400px] object-cover"
+                    className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />
                 </div>
               ))}
             </Slider>
           </motion.div>
-          {/* LEFT - TEXT */}
+
+          {/* TEXT */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold mb-6">
-              Challenge 2:{" "}
-              <span className="text-green-700">Skills Gap Analyzer</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
+              Tabiya Challenge 2:{" "}
+              <span className="text-green-700">JobWeave</span>
             </h2>
             <p className="text-gray-600 mb-8">
               Find the shortest path from the skills you have to the job you
@@ -237,14 +272,14 @@ const LandingPage = () => {
 
       {/* Bridge Section */}
       <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto text-center px-6 overflow-hidden">
-          <h2 className="text-3xl font-bold mb-4">
+        <div className="max-w-6xl mx-auto text-center px-4 sm:px-6 overflow-hidden">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
             Let Job Weave Bridge Your Career Gap
           </h2>
           <p className="text-gray-600 mb-12">
             Built on the world’s most comprehensive skills + occupation taxonomy
           </p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[
               {
                 icon: "🎯",
@@ -279,7 +314,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
                 <Target size={24} className="text-green-500" />
@@ -290,7 +325,7 @@ const LandingPage = () => {
                 3,000+ occupations to help you find the shortest path from your
                 current skills to your dream career.
               </p>
-              <div className="flex items-center space-x-4 text-sm text-gray-400">
+              <div className="flex flex-wrap gap-2 text-sm text-gray-400">
                 <span>Tabiya Challenge 2</span>
                 <span>•</span>
                 <span>React + Express.js</span>

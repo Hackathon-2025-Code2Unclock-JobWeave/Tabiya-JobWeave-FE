@@ -40,6 +40,7 @@ import {
   PolarAngleAxis,
   Radar,
 } from "recharts";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
@@ -689,12 +690,19 @@ const GapAnalysisResults = ({ results }) => {
             <h3 className="text-lg font-bold">Learning Path</h3>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <div className="grid md:grid-cols-3  gap-4 mb-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {learningPath.totalSkillsToLearn}
               </div>
               <div className="text-sm text-gray-600">Skills to Learn</div>
+            </div>
+
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">
+                {learningPath.estimatedTime}
+              </div>
+              <div className="text-sm text-gray-600">Estimated Time</div>
             </div>
 
             <div className="text-center p-4 bg-purple-50 rounded-lg">
@@ -978,7 +986,7 @@ const SkillsExplorer = () => {
   );
 };
 
-// Career Pathway Visualizer Component
+// // Career Pathway Visualizer Component
 const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
   const [pathwayData, setPathwayData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -1951,17 +1959,43 @@ const SkillsGapAnalyzerApp = () => {
                     </div>
                   </div>
 
-                  <div className="p-4 bg-gray-200 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">
+                  <div className="p-6 bg-white rounded-xl shadow-lg">
+                    <h4 className="font-bold text-green-900 text-md mb-4">
                       What You'll Get
                     </h4>
-                    <ul className="space-y-1 text-sm text-gray-700 font-semibold">
-                      <li>• Detailed readiness assessment</li>
-                      <li>• Skills you have vs. skills needed</li>
-                      <li>• Learning priorities and timeline</li>
-                      <li>• Career pathway with stepping stones</li>
-                      <li>• Alternative career suggestions</li>
-                    </ul>
+                    <div className="divide-y divide-gray-200">
+                      {[
+                        {
+                          title: "Assessment",
+                          desc: "Detailed readiness check for your career",
+                        },
+                        {
+                          title: "Skills Gap",
+                          desc: "Compare skills you have vs. those needed",
+                        },
+                        {
+                          title: "Learning Plan",
+                          desc: "Priorities and suggested timeline",
+                        },
+                        {
+                          title: "Pathways",
+                          desc: "Career stepping-stones to grow",
+                        },
+                        {
+                          title: "Alternatives",
+                          desc: "Other similar career suggestions for you",
+                        },
+                      ].map((item, idx) => (
+                        <details key={idx} className="py-2 cursor-pointer">
+                          <summary className="font-semibold text-gray-700">
+                            {item.title}
+                          </summary>
+                          <p className="text-sm text-gray-500 mt-1">
+                            {item.desc}
+                          </p>
+                        </details>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
