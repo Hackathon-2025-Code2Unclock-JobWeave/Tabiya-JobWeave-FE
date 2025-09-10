@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   Search,
   Target,
@@ -28,6 +29,17 @@ import {
   Zap,
   Bold,
 } from "lucide-react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  Radar,
+} from "recharts";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
@@ -92,8 +104,7 @@ const Button = ({
   className = "",
 }) => {
   const variants = {
-    primary:
-      "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700",
+    primary: "bg-green-700 text-white hover:from-blue-700 hover:to-purple-700",
     secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
     outline: "border border-gray-300 text-gray-700 hover:bg-gray-50",
     success: "bg-green-600 text-white hover:bg-green-700",
@@ -240,7 +251,7 @@ const SkillInput = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
         />
 
         {(suggestions.length > 0 || isLoading) && (
@@ -340,7 +351,7 @@ const OccupationSearch = ({
           onChange(e.target.value);
         }}
         placeholder={placeholder}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full px-4 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-900 focus:border-transparent"
       />
 
       {(suggestions.length > 0 || isLoading) && (
@@ -373,6 +384,7 @@ const OccupationSearch = ({
 };
 
 // Dashboard Component
+const COLORS = ["#16a34a", "#dc2626", "#f97316"]; // green, red, orange
 const Dashboard = ({ userSkills, analysisResults }) => {
   const [statistics, setStatistics] = useState(null);
   const [healthStatus, setHealthStatus] = useState(null);
@@ -402,82 +414,104 @@ const Dashboard = ({ userSkills, analysisResults }) => {
   }, []);
 
   if (isLoading) {
-    return <LoadingSpinner text="Loading dashboard..." />;
+    return <LoadingSpinner text="Loading Status..." />;
   }
+
+  // Prepare chart data
+  const skillDistribution = [
+    {
+      name: "Skills You Have",
+      value: analysisResults?.gapAnalysis.skillsCounts.hasSkills || 0,
+    },
+    {
+      name: "Critical Missing",
+      value: analysisResults?.gapAnalysis.skillsCounts.criticalMissing || 0,
+    },
+    {
+      name: "Optional Missing",
+      value: analysisResults?.gapAnalysis.skillsCounts.optionalMissing || 0,
+    },
+  ];
+
+  const readinessRadar = [
+    {
+      subject: "Readiness",
+      A: analysisResults?.gapAnalysis.readinessScore || 0,
+    },
+    {
+      subject: "Critical Gaps",
+      A: analysisResults?.gapAnalysis.skillsCounts.criticalMissing || 0,
+    },
+    {
+      subject: "Optional Gaps",
+      A: analysisResults?.gapAnalysis.skillsCounts.optionalMissing || 0,
+    },
+    {
+      subject: "Stepping Stones",
+      A: analysisResults?.careerPathway.steppingStones.length || 0,
+    },
+  ];
 
   return (
     <div className="space-y-8">
-      {/* Quick Stats */}
-      <div>
-        <div className="bg-white rounded-lg shadow-md p-6 text-center w-full">
-          <Users className="mx-auto text-orange-600 mb-3" size={32} />
-          <div className="text-2xl font-bold text-gray-900">
-            {userSkills.length ? userSkills.length : "Analyze your skill first"}
-          </div>
-          <div className="text-gray-600">Your Skills</div>
-        </div>
-      </div>
+      {/* Existing cards here... */}
 
-      {/* Personal Progress */}
+      {/* Graphs Section */}
       {analysisResults && (
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold mb-6">Your Analysis Summary</h3>
+          <h3 className="text-xl font-bold mb-6">Visual Insights</h3>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="font-semibold mb-3">Target Occupation</h4>
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="font-medium text-blue-900">
-                  {analysisResults.targetOccupation.name}
-                </div>
-                <div className="text-blue-700 text-sm">
-                  {analysisResults.targetOccupation.code}
-                </div>
-              </div>
+            {/* Pie Chart */}
+            <div className="h-64">
+              <h4 className="font-semibold mb-3 text-center">
+                Skill Distribution
+              </h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={skillDistribution}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={100}
+                    label
+                  >
+                    {skillDistribution.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-3">Readiness Score</h4>
-              <ProgressBar
-                percentage={analysisResults.gapAnalysis.readinessScore}
-                color={
-                  analysisResults.gapAnalysis.readinessLevel === "high"
-                    ? "green"
-                    : analysisResults.gapAnalysis.readinessLevel === "medium"
-                    ? "yellow"
-                    : "red"
-                }
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="text-center p-3 bg-green-50 rounded">
-              <div className="text-lg font-bold text-green-600">
-                {analysisResults.gapAnalysis.skillsCounts.hasSkills}
-              </div>
-              <div className="text-sm text-gray-600">Skills You Have</div>
-            </div>
-
-            <div className="text-center p-3 bg-red-50 rounded">
-              <div className="text-lg font-bold text-red-600">
-                {analysisResults.gapAnalysis.skillsCounts.criticalMissing}
-              </div>
-              <div className="text-sm text-gray-600">Critical Missing</div>
-            </div>
-
-            <div className="text-center p-3 bg-orange-50 rounded">
-              <div className="text-lg font-bold text-orange-600">
-                {analysisResults.gapAnalysis.skillsCounts.optionalMissing}
-              </div>
-              <div className="text-sm text-gray-600">Optional Missing</div>
-            </div>
-
-            <div className="text-center p-3 bg-purple-50 rounded">
-              <div className="text-lg font-bold text-purple-600">
-                {analysisResults.careerPathway.steppingStones.length}
-              </div>
-              <div className="text-sm text-gray-600">Stepping Stones</div>
+            {/* Radar Chart */}
+            <div className="h-64">
+              <h4 className="font-semibold mb-3 text-center">
+                Career Readiness Overview
+              </h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="80%"
+                  data={readinessRadar}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <Radar
+                    name="Readiness"
+                    dataKey="A"
+                    stroke="#2563eb"
+                    fill="#3b82f6"
+                    fillOpacity={0.6}
+                  />
+                  <Tooltip />
+                </RadarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -547,7 +581,7 @@ const GapAnalysisResults = ({ results }) => {
   return (
     <div className="space-y-8">
       {/* Target Occupation Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6">
+      <div className="bg-green-700 text-white rounded-lg p-6">
         <div className="flex items-center space-x-3 mb-3">
           <Target size={28} />
           <h2 className="text-2xl font-bold">Analysis Results</h2>
@@ -656,19 +690,21 @@ const GapAnalysisResults = ({ results }) => {
             <h3 className="text-lg font-bold">Learning Path</h3>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
+          <div className="grid md:grid-cols-3  gap-4 mb-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {learningPath.totalSkillsToLearn}
               </div>
               <div className="text-sm text-gray-600">Skills to Learn</div>
             </div>
+
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
                 {learningPath.estimatedTime}
               </div>
               <div className="text-sm text-gray-600">Estimated Time</div>
             </div>
+
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
                 {learningPath.priorities?.length || 0}
@@ -950,7 +986,7 @@ const SkillsExplorer = () => {
   );
 };
 
-// Career Pathway Visualizer Component
+// // Career Pathway Visualizer Component
 const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
   const [pathwayData, setPathwayData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -1210,7 +1246,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       provider: "Google Books",
       description: b.volumeInfo.description || "",
       level: "All levels",
-      price: "Free / Paid",
+      price: "Free",
       url: b.volumeInfo.infoLink,
     }));
   };
@@ -1272,7 +1308,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
           provider: "AI Recommendation",
           description: "",
           level: "All levels",
-          price: "Free / Paid",
+          price: "Free",
           url: "",
         }));
     } catch (err) {
@@ -1696,16 +1732,17 @@ const SkillsGapAnalyzerApp = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
+
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
-                <Target className="text-white" size={28} />
+              <div className="bg-gradient-to-r  bg-green-600 p-3 rounded-xl">
+                <Target className="text-white" size={20} />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">JobWeave</h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 ">
                   Find your path from skills to career success
                 </p>
               </div>
@@ -1720,9 +1757,23 @@ const SkillsGapAnalyzerApp = () => {
                   </div>
                 </div>
               )}
-
-              <Button variant="outline" onClick={clearAll} size="sm">
-                Clear All
+              <ul>
+                <li>
+                  <a
+                    href="#home"
+                    className="border font-mono  text-black border-gray-400  rounded-lg py-1.5 px-1.5 hover:text-gray-100 hover:bg-green-900 "
+                  >
+                    <Link to={"/"}>Back Home</Link>
+                  </a>
+                </li>
+              </ul>
+              <Button
+                variant="outline"
+                className="py-1.5 px-1.5   hover:text-gray-100 hover:bg-red-700 font-semibold"
+                onClick={clearAll}
+                size="sm"
+              >
+                Reset Analysis
               </Button>
             </div>
 
@@ -1746,7 +1797,7 @@ const SkillsGapAnalyzerApp = () => {
                     onClick={() => setActiveView(view.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeView === view.id
-                        ? "bg-white text-blue-600 shadow-sm"
+                        ? "bg-green-200 text-gray-900 shadow-sm"
                         : "text-gray-600 hover:text-gray-900"
                     }`}
                   >
@@ -1837,7 +1888,7 @@ const SkillsGapAnalyzerApp = () => {
                       onSkillsChange={setUserSkills}
                       placeholder="Type skills like 'JavaScript', 'Project Management'..."
                     />
-                    <p className="text-sm text-gray-500 mt-2">
+                    <p className="hidden  text-sm text-gray-500 mt-2">
                       Add all your relevant skills. We'll match them against
                       14,000+ skills in the taxonomy.
                     </p>
@@ -1852,7 +1903,7 @@ const SkillsGapAnalyzerApp = () => {
                       onChange={setTargetOccupation}
                       placeholder="Search for your target job..."
                     />
-                    <p className="text-sm text-gray-500 mt-2">
+                    <p className="hidden text-sm text-gray-500 mt-2">
                       Enter the occupation you want to transition to or advance
                       in.
                     </p>
@@ -1865,8 +1916,8 @@ const SkillsGapAnalyzerApp = () => {
                       userSkills.length === 0 ||
                       !targetOccupation.trim()
                     }
-                    className="w-full flex items-center justify-center space-x-2"
-                    size="lg"
+                    className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-700"
+                    size="md"
                   >
                     {isAnalyzing ? (
                       <>
@@ -1884,37 +1935,67 @@ const SkillsGapAnalyzerApp = () => {
 
                 {/* Right Column - Quick Stats */}
                 <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-gray-200 rounded-lg">
                     <h4 className="font-medium text-blue-900 mb-2">
                       Ready to Analyze
                     </h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center justify-between">
-                        <span className="text-blue-700">Skills Added:</span>
-                        <span className="font-medium text-blue-900">
+                        <span className="text-gray-700 font-semibold">
+                          Skills Added:
+                        </span>
+                        <span className="font-medium text-gray-900">
                           {userSkills.length}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-blue-700">Target Set:</span>
-                        <span className="font-medium text-blue-900">
+                        <span className="text-gray-700 font-semibold ">
+                          Target Set:
+                        </span>
+                        <span className="font-medium text-gray-900">
                           {targetOccupation ? "Yes" : "No"}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h4 className="font-medium text-green-900 mb-2">
+                  <div className="p-6 bg-white rounded-xl shadow-lg">
+                    <h4 className="font-bold text-green-900 text-md mb-4">
                       What You'll Get
                     </h4>
-                    <ul className="space-y-1 text-sm text-green-700">
-                      <li>• Detailed readiness assessment</li>
-                      <li>• Skills you have vs. skills needed</li>
-                      <li>• Learning priorities and timeline</li>
-                      <li>• Career pathway with stepping stones</li>
-                      <li>• Alternative career suggestions</li>
-                    </ul>
+                    <div className="divide-y divide-gray-200">
+                      {[
+                        {
+                          title: "Assessment",
+                          desc: "Detailed readiness check for your career",
+                        },
+                        {
+                          title: "Skills Gap",
+                          desc: "Compare skills you have vs. those needed",
+                        },
+                        {
+                          title: "Learning Plan",
+                          desc: "Priorities and suggested timeline",
+                        },
+                        {
+                          title: "Pathways",
+                          desc: "Career stepping-stones to grow",
+                        },
+                        {
+                          title: "Alternatives",
+                          desc: "Other similar career suggestions for you",
+                        },
+                      ].map((item, idx) => (
+                        <details key={idx} className="py-2 cursor-pointer">
+                          <summary className="font-semibold text-gray-700">
+                            {item.title}
+                          </summary>
+                          <p className="text-sm text-gray-500 mt-1">
+                            {item.desc}
+                          </p>
+                        </details>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1961,22 +2042,21 @@ const SkillsGapAnalyzerApp = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-10 ">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <Target size={24} />
+                <Target size={24} className="text-green-500" />
                 <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
-                Built for Tabiya Hackathon Challenge 2. Powered by the Tabiya
-                Inclusive Taxonomy with 14,000+ skills and 3,000+ occupations to
-                help you find the shortest path from your current skills to your
-                dream career.
+                Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills and
+                3,000+ occupations to help you find the shortest path from your
+                current skills to your dream career.
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>Challenge 2</span>
+                <span>Tabiya Challenge 2</span>
                 <span>•</span>
                 <span>React + Express.js</span>
                 <span>•</span>
@@ -1986,12 +2066,10 @@ const SkillsGapAnalyzerApp = () => {
 
             <div>
               <h4 className="text-lg font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Skills gap analysis with AI-powered matching</li>
+              <ul className=" text-gray-400 text-sm space-y-2">
                 <li>Career pathway planning with stepping stones</li>
-                <li>14,000+ skills taxonomy exploration</li>
                 <li>Learning resource recommendations</li>
-                <li>Export and share analysis results</li>
+                <li>14,000+ skills taxonomy exploration</li>
                 <li>Real-time occupation and skill search</li>
               </ul>
             </div>
@@ -2030,11 +2108,15 @@ const SkillsGapAnalyzerApp = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 JobWeave. Built for Tabiya Hackathon Challenge 2.</p>
-            <p className="text-sm mt-2">
-              Empowering career development through data-driven insights.
+          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400">
+            <p>
+              &copy; 2025 JobWeave. Built for Tabiya Hackathon Tabiay Challenge
+              2.
             </p>
+
+            <article className="pt-8 pb-4 font-bold text-white text-lg ">
+              The Gym
+            </article>
           </div>
         </div>
       </footer>
@@ -2046,7 +2128,7 @@ const SkillsGapAnalyzerApp = () => {
             onClick={performAnalysis}
             disabled={isAnalyzing}
             className="shadow-lg flex items-center space-x-2"
-            size="lg"
+            size="md"
           >
             {isAnalyzing ? (
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
