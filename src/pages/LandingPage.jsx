@@ -145,7 +145,7 @@ const LandingPage = () => {
               {[1, 2, 3, 4].map((num) => (
                 <div key={num}>
                   <img
-                    src={`public/images/image_fx (${num}).jpg`}
+                    src={`/images/Image_fx (${num}).jpg`}
                     alt={`slide-${num}`}
                     className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />
@@ -210,7 +210,7 @@ const LandingPage = () => {
               {[2, 3, 4].map((num) => (
                 <div key={num}>
                   <img
-                    src={`public/images/image_fx (${num}).jpg`}
+                    src={`/images/Image_fx (${num}).jpg`}
                     alt={`challenge-slide-${num}`}
                     className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />

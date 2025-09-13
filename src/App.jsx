@@ -12,10 +12,6 @@ function App() {
 
         {/* Analyzer page */}
         <Route path="skillgapanalyser" element={<SkillsGapAnalyzerApp />} />
-
-        {/* Later you can add more routes like: */}
-        {/* <Route path="resources" element={<ResourcesPage />} /> */}
-        {/* <Route path="about" element={<AboutPage />} /> */}
       </Routes>
     </BrowserRouter>
   );
