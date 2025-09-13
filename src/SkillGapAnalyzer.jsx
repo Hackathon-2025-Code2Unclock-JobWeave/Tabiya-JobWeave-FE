@@ -1085,7 +1085,9 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
               You're Ready To:
             </h5>
             <ul className="text-green-700 text-sm space-y-1">
-              <li>• Apply directly to {targetOccupation} positions</li>
+              <li className="font-bold">
+                • Apply directly to {targetOccupation} positions
+              </li>
               <li>• Start building a portfolio in this field</li>
               <li>• Network with professionals in this area</li>
               <li>• Look for entry-level opportunities</li>
@@ -1375,7 +1377,7 @@ const LearningResourcesFinder = ({ missingSkills = [] }) => {
       </div>
     );
   }
-  console.log("missingSkills:", missingSkills);
+  // console.log("missingSkills:", missingSkills);
   return (
     <div className="space-y-6">
       {/* Skill Selection */}
@@ -1531,7 +1533,7 @@ const SimilarOccupations = ({ userSkills }) => {
           method: "POST",
           body: JSON.stringify({
             userSkills,
-            options: { limit: 8, minMatch: 25 },
+            options: { limit: 10, minMatch: 30 },
           }),
         });
 

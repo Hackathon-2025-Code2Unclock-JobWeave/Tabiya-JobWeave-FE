@@ -30,6 +30,7 @@ const LandingPage = () => {
             <img
               src="/images/Screenshot 2025-09-08 201718.png"
               alt="Logo"
+              onError={(e) => (e.currentTarget.src = "/fallback.jpg")}
               className="size-10 mr-3 rounded bg-green-600"
             />
             <div className="flex flex-col">
@@ -147,6 +148,7 @@ const LandingPage = () => {
                   <img
                     src={`/images/Image_fx (${num}).jpg`}
                     alt={`slide-${num}`}
+                    onError={(e) => (e.currentTarget.src = "/fallback.jpg")}
                     className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />
                 </div>
@@ -212,6 +214,7 @@ const LandingPage = () => {
                   <img
                     src={`/images/Image_fx (${num}).jpg`}
                     alt={`challenge-slide-${num}`}
+                    onError={(e) => (e.currentTarget.src = "/fallback.jpg")}
                     className="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover"
                   />
                 </div>
