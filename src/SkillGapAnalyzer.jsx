@@ -2174,8 +2174,8 @@ const SkillsGapAnalyzerApp = () => {
           <div className="grid md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <Target size={24} className="text-green-500" />
-                <span className="text-xl font-bold">JobWeave</span>
+                  <Target size={28} className="text-gray-200 bg-green-600 border-12" />
+                  <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
                 Powered by the Tabiya Inclusive Taxonomy with 14,000+ skills and
