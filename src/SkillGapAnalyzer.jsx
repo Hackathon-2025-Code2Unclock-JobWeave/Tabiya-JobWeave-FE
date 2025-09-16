@@ -153,30 +153,30 @@ const SkillBadge = ({ skill, onRemove, variant = "default" }) => {
   );
 };
 
-const ProgressBar = ({ percentage, label, color = "blue" }) => {
-  const colors = {
-    blue: "bg-blue-600",
-    green: "bg-green-600",
-    red: "bg-red-600",
-    yellow: "bg-yellow-600",
-    purple: "bg-purple-600",
-  };
+// const ProgressBar = ({ percentage, label, color = "blue" }) => {
+//   const colors = {
+//     blue: "bg-blue-600",
+//     green: "bg-green-600",
+//     red: "bg-red-600",
+//     yellow: "bg-yellow-600",
+//     purple: "bg-purple-600",
+//   };
 
-  return (
-    <div className="w-full">
-      {label && (
-        <div className="text-sm font-medium text-gray-700 mb-2">{label}</div>
-      )}
-      <div className="w-full bg-gray-200 rounded-full h-3">
-        <div
-          className={`h-3 rounded-full transition-all duration-500 ${colors[color]}`}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        ></div>
-      </div>
-      <div className="text-sm text-gray-600 mt-1">{percentage}%</div>
-    </div>
-  );
-};
+//   return (
+//     <div className="w-full">
+//       {label && (
+//         <div className="text-sm font-medium text-gray-700 mb-2">{label}</div>
+//       )}
+//       <div className="w-full bg-gray-200 rounded-full h-3">
+//         <div
+//           className={`h-3 rounded-full transition-all duration-500 ${colors[color]}`}
+//           style={{ width: `${Math.min(percentage, 100)}%` }}
+//         ></div>
+//       </div>
+//       <div className="text-sm text-gray-600 mt-1">{percentage}%</div>
+//     </div>
+//   );
+// };
 
 // Skills Input Component
 const SkillInput = ({
@@ -545,6 +545,78 @@ const Dashboard = ({ userSkills, analysisResults }) => {
   );
 };
 
+const readinessRanges = [
+  { min: 0, max: 20, label: "Very Low", color: "#ef4444" }, // red
+  { min: 20, max: 40, label: "Low", color: "#f97316" }, // orange
+  { min: 40, max: 70, label: "Medium", color: "#eab308" }, // yellow
+  { min: 70, max: 100, label: "High", color: "#22c55e" }, // green
+];
+
+const ProgressBar2 = ({ percentage }) => {
+  return (
+    <div className="w-full">
+      {/* User Percentage */}
+      {/* <div className="mt-1 text-right text-sm font-medium text-gray-800">
+        {percentage}% Readiness
+      </div> */}
+
+      {/* Main Bar */}
+      <div className="relative w-full h-3 rounded bg-gray-200 flex overflow-hidden">
+        {readinessRanges.map((range, i) => {
+          const width = range.max - range.min;
+          return (
+            <div
+              key={i}
+              style={{
+                width: `${width}%`,
+                backgroundColor: range.color,
+              }}
+            />
+          );
+        })}
+
+        {/* Filled bar (from 0 up to user readiness) */}
+        <div
+          className=" absolute top-0  h-1/2 bg-blue-900 opacity-40 rounded-l transform -translate-y-1/2"
+          style={{ width: `${percentage}%` }}
+        />
+
+        {/* Arrow pointer icon */}
+        <div
+          className="absolute top-1/2 transform -translate-y-1/2"
+          style={{ left: `calc(${percentage}% - 8px)` }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-5 text-black"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            {/* Arrow shape */}
+            <path d="M12 2L19 12H5L12 2Z" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Range Labels */}
+      <div className="flex justify-between mt-2 text-xs text-gray-700">
+        {readinessRanges.map((range, i) => (
+          <div
+            key={i}
+            className="text-center"
+            style={{ width: `${range.max - range.min}%` }}
+          >
+            <div className="font-bold">{range.label}</div>
+            {/* <div className="text-gray-500">
+              {range.min}–{range.max}
+            </div> */}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Gap Analysis Results Component
 const GapAnalysisResults = ({ results }) => {
   if (!results) return null;
@@ -552,18 +624,18 @@ const GapAnalysisResults = ({ results }) => {
   const { targetOccupation, gapAnalysis, careerPathway, learningPath } =
     results;
 
-  const getReadinessColor = (level) => {
-    switch (level) {
-      case "high":
-        return "green";
-      case "medium":
-        return "yellow";
-      case "low":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
+  // const getReadinessColor = (level) => {
+  //   switch (level) {
+  //     case "high":
+  //       return "green";
+  //     case "medium":
+  //       return "yellow";
+  //     case "low":
+  //       return "red";
+  //     default:
+  //       return "gray";
+  //   }
+  // };
 
   const getReadinessIcon = (level) => {
     switch (level) {
@@ -582,16 +654,16 @@ const GapAnalysisResults = ({ results }) => {
     <div className="space-y-8">
       {/* Target Occupation Header */}
       <div className="bg-green-700 text-white rounded-lg p-6">
-        <div className="flex items-center space-x-3 mb-3">
-          <Target size={28} />
+        {/* <div className="flex items-center space-x-3 mb-3">
+          <Target size={22} />
           <h2 className="text-2xl font-bold">Analysis Results</h2>
-        </div>
+        </div> */}
         <div className="text-lg">
           Target: <span className="font-semibold">{targetOccupation.name}</span>
         </div>
-        {targetOccupation.code && (
+        {/* {targetOccupation.code && (
           <div className="text-blue-100">Code: {targetOccupation.code}</div>
-        )}
+        )} */}
       </div>
 
       {/* Readiness Score */}
@@ -599,13 +671,13 @@ const GapAnalysisResults = ({ results }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             {getReadinessIcon(gapAnalysis.readinessLevel)}
-            <h3 className="text-xl font-bold">Readiness Assessment</h3>
+            <h3 className="text-xl font-bold">Readiness</h3>
           </div>
           <div className="text-3xl font-bold text-gray-800">
             {gapAnalysis.readinessScore}%
           </div>
         </div>
-
+        {/* 
         <ProgressBar
           percentage={gapAnalysis.readinessScore}
           color={getReadinessColor(gapAnalysis.readinessLevel)}
@@ -613,7 +685,9 @@ const GapAnalysisResults = ({ results }) => {
             gapAnalysis.readinessLevel.charAt(0).toUpperCase() +
             gapAnalysis.readinessLevel.slice(1)
           } Readiness`}
-        />
+        /> */}
+
+        <ProgressBar2 percentage={gapAnalysis.readinessScore} />
 
         <div className="mt-4 p-4 bg-blue-50 rounded-lg">
           <div className="font-medium text-blue-900">Recommendation:</div>
@@ -690,7 +764,7 @@ const GapAnalysisResults = ({ results }) => {
             <h3 className="text-lg font-bold">Learning Path</h3>
           </div>
 
-          <div className="grid md:grid-cols-3  gap-4 mb-4">
+          <div className="grid md:grid-cols-5 gap-4 mb-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {learningPath.totalSkillsToLearn}
@@ -707,40 +781,91 @@ const GapAnalysisResults = ({ results }) => {
 
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
-                {learningPath.priorities?.length || 0}
+                {
+                  learningPath.priorities.filter(
+                    (s) => s.priority === "critical"
+                  ).length
+                }
               </div>
-              <div className="text-sm text-gray-600">Priority Skills</div>
+              <div className="text-sm text-gray-600">Critical Skills</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600">
+                {
+                  learningPath.priorities.filter(
+                    (s) => s.priority === "optional"
+                  ).length
+                }
+              </div>
+              <div className="text-sm text-gray-600">Optional Skills</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">
+                {learningPath.estimatedTime}
+              </div>
+              <div className="text-sm text-gray-600">Estimated Time</div>
             </div>
           </div>
 
-          {learningPath.priorities && learningPath.priorities.length > 0 && (
+          {/* Top Priority Skills */}
+          {learningPath.priorities.length > 0 && (
             <div className="space-y-2">
               <h4 className="font-medium text-gray-800">
-                Top Priority Skills:
+                Top Skills to Learn:
               </h4>
-              <div className="grid gap-2">
-                {learningPath.priorities.slice(0, 5).map((skill, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-                  >
-                    <div>
-                      <div className="font-medium">{skill.PREFERREDLABEL}</div>
-                      <div className="text-sm text-gray-600">
-                        {skill.reasoning}
-                      </div>
-                    </div>
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        skill.priority === "critical"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-orange-100 text-orange-800"
-                      }`}
+              <div className="grid grid-cols-2">
+                <div>
+                  {learningPath.priorities.slice(0, 8).map((skill, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
                     >
-                      {skill.priority}
-                    </span>
-                  </div>
-                ))}
+                      <div>
+                        <div className="font-medium">
+                          {skill.PREFERREDLABEL}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {skill.reasoning}
+                        </div>
+                      </div>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          skill.priority === "critical"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-orange-100 text-orange-800"
+                        }`}
+                      >
+                        {skill.priority}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  {learningPath.priorities.slice(0, 8).map((skill, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                    >
+                      <div>
+                        <div className="font-medium">
+                          {skill.PREFERREDLABEL}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {skill.reasoning}
+                        </div>
+                      </div>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          skill.priority === "critical"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-orange-100 text-orange-800"
+                        }`}
+                      >
+                        {skill.priority}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -2058,11 +2183,12 @@ const SkillsGapAnalyzerApp = () => {
                 current skills to your dream career.
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <span>•</span>
                 <span>Tabiya Challenge 2</span>
                 <span>•</span>
-                <span>React + Express.js</span>
+                <span>Open Source Data </span>
                 <span>•</span>
-                <span>Open Source Data</span>
+                <span>Tabiya Inclusive Taxonomy</span>
               </div>
             </div>
 
