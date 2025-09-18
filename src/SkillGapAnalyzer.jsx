@@ -888,7 +888,7 @@ const GapAnalysisResults = ({ results }) => {
             </div>
 
             <div className="space-y-3">
-              {careerPathway.steppingStones.slice(0, 2).map((stone, index) => (
+              {careerPathway.steppingStones.slice(0, 3).map((stone, index) => (
                 <div
                   key={index}
                   className="flex items-center space-x-4 p-3 border border-gray-200 rounded-lg"
@@ -1109,7 +1109,7 @@ const SkillsExplorer = () => {
   );
 };
 
-// // Career Pathway Visualizer Component
+// Career Pathway Visualizer Component
 const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
   const [pathwayData, setPathwayData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -1130,10 +1130,9 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
           method: "POST",
           body: JSON.stringify({ userSkills, targetOccupation }),
         });
-
         setPathwayData(response);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -1142,6 +1141,7 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
     fetchPathway();
   }, [userSkills, targetOccupation]);
 
+  // --- States ---
   if (!userSkills.length || !targetOccupation) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -1184,16 +1184,30 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
     );
   }
 
+  // --- Data Mapping ---
   const { pathway } = pathwayData;
+  const mappedStones = pathway.steppingStones.map((stone) => ({
+    occupation: {
+      name: stone.occupation.PREFERREDLABEL,
+      description: stone.occupation.description,
+    },
+    readiness: stone.currentReadiness,
+    skillsGained: stone.skillsTowardTarget,
+    progressValue: stone.progressTowardTarget,
+    newSkills: stone.newSkillsGained,
+    timeEstimate: stone.timeEstimate,
+  }));
 
+  // --- UI ---
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center space-x-2 mb-6">
         <TrendingUp className="text-purple-600" size={24} />
-        <h3 className="text-xl font-bold">Career Pathway Visualization</h3>
+        <h3 className="text-xl font-bold">Career Pathway Results</h3>
       </div>
 
       {pathway.directPath ? (
+        // ✅ Direct Path
         <div className="text-center py-12">
           <CheckCircle className="text-green-600 mx-auto mb-4" size={64} />
           <h4 className="text-xl font-bold text-green-800 mb-2">
@@ -1202,23 +1216,11 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
           <p className="text-green-700 max-w-md mx-auto">
             {pathway.recommendation}
           </p>
-
-          <div className="mt-6 p-4 bg-green-50 rounded-lg">
-            <h5 className="font-medium text-green-800 mb-2">
-              You're Ready To:
-            </h5>
-            <ul className="text-green-700 text-sm space-y-1">
-              <li className="font-bold">
-                • Apply directly to {targetOccupation} positions
-              </li>
-              <li>• Start building a portfolio in this field</li>
-              <li>• Network with professionals in this area</li>
-              <li>• Look for entry-level opportunities</li>
-            </ul>
-          </div>
         </div>
       ) : (
+        // 🔹 Stepping Stones Path
         <div className="space-y-6">
+          {/* Strategy */}
           <div className="bg-purple-50 rounded-lg p-4">
             <div className="font-medium text-purple-900">
               Recommended Strategy:
@@ -1226,13 +1228,13 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
             <div className="text-purple-800">{pathway.recommendation}</div>
           </div>
 
-          {pathway.steppingStones && pathway.steppingStones.length > 0 && (
+          {mappedStones.length > 0 && (
             <div className="space-y-4">
               <h4 className="font-semibold text-gray-800">
                 Your Career Pathway:
               </h4>
 
-              {/* Current Position */}
+              {/* Current position */}
               <div className="flex items-center mb-4">
                 <div className="flex-shrink-0 w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center font-bold">
                   NOW
@@ -1245,8 +1247,8 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                 </div>
               </div>
 
-              {/* Stepping Stones */}
-              {pathway.steppingStones.map((stone, index) => (
+              {/* Stepping stones */}
+              {mappedStones.map((stone, index) => (
                 <div key={index} className="relative">
                   <div className="flex items-center mb-4">
                     <div className="flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
@@ -1272,6 +1274,19 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                         {stone.occupation.description}
                       </p>
 
+                      {/* Readiness bar with arrow */}
+                      <div className="relative w-full h-3 bg-gray-200 rounded mb-3">
+                        <div
+                          className="absolute top-1/2 left-0 h-2 bg-blue-900 transform -translate-y-1/2"
+                          style={{
+                            width: `${stone.readiness}%`,
+                            clipPath:
+                              "polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%)",
+                          }}
+                        />
+                      </div>
+
+                      {/* Skills summary */}
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex items-center space-x-2">
                           <Zap className="text-purple-600" size={14} />
@@ -1287,22 +1302,21 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                         </div>
                       </div>
 
-                      {stone.newSkills && stone.newSkills.length > 0 && (
+                      {/* New skills */}
+                      {stone.newSkills?.length > 0 && (
                         <div className="mt-3">
                           <div className="text-sm font-medium text-purple-800 mb-2">
                             Skills you'll gain:
                           </div>
                           <div className="flex flex-wrap gap-1">
-                            {stone.newSkills
-                              .slice(0, 4)
-                              .map((skill, skillIndex) => (
-                                <span
-                                  key={skillIndex}
-                                  className="bg-white text-purple-700 px-2 py-1 rounded text-xs border border-purple-200"
-                                >
-                                  {skill.name}
-                                </span>
-                              ))}
+                            {stone.newSkills.slice(0, 4).map((skill, i) => (
+                              <span
+                                key={i}
+                                className="bg-white text-purple-700 px-2 py-1 rounded text-xs border border-purple-200"
+                              >
+                                {skill.name}
+                              </span>
+                            ))}
                             {stone.newSkills.length > 4 && (
                               <span className="text-purple-600 text-xs px-2 py-1">
                                 +{stone.newSkills.length - 4} more
@@ -1315,13 +1329,13 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                   </div>
 
                   {/* Connection line */}
-                  {index < pathway.steppingStones.length - 1 && (
+                  {index < mappedStones.length - 1 && (
                     <div className="absolute left-5 w-0.5 h-6 bg-purple-300"></div>
                   )}
                 </div>
               ))}
 
-              {/* Final Target */}
+              {/* Final target */}
               <div className="flex items-center">
                 <div className="flex-shrink-0 w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center">
                   <Target size={18} />
@@ -1811,8 +1825,8 @@ const SkillsGapAnalyzerApp = () => {
     { id: "dashboard", label: "Current Status", icon: BarChart3 },
     { id: "pathway", label: "Career Pathway", icon: TrendingUp },
     { id: "resources", label: "Learning Resources", icon: BookOpen },
-    { id: "explorer", label: "Skills Explorer", icon: Search },
     { id: "similar", label: "Similar Occupations", icon: Users },
+    { id: "explorer", label: "Skills Explorer", icon: Search },
   ];
 
   const performAnalysis = async () => {
