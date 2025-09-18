@@ -229,8 +229,7 @@ const LandingPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
-              Tabiya Challenge 2:{" "}
-              <span className="text-green-700">JobWeave</span>
+              Challenge: <span className="text-green-700">JobWeave</span>
             </h2>
             <p className="text-gray-600 mb-8">
               Find the shortest path from the skills you have to the job you
@@ -329,11 +328,12 @@ const LandingPage = () => {
                 current skills to your dream career.
               </p>
               <div className="flex flex-wrap gap-2 text-sm text-gray-400">
+                <span>•</span>
                 <span>Tabiya Challenge 2</span>
                 <span>•</span>
-                <span>React + Express.js</span>
+                <span>Open Source Data </span>
                 <span>•</span>
-                <span>Open Source Data</span>
+                <span>Tabiya Inclusive Taxonomy</span>
               </div>
             </div>
 

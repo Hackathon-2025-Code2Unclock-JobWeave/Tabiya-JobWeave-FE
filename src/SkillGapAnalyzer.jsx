@@ -153,30 +153,30 @@ const SkillBadge = ({ skill, onRemove, variant = "default" }) => {
   );
 };
 
-const ProgressBar = ({ percentage, label, color = "blue" }) => {
-  const colors = {
-    blue: "bg-blue-600",
-    green: "bg-green-600",
-    red: "bg-red-600",
-    yellow: "bg-yellow-600",
-    purple: "bg-purple-600",
-  };
+// const ProgressBar = ({ percentage, label, color = "blue" }) => {
+//   const colors = {
+//     blue: "bg-blue-600",
+//     green: "bg-green-600",
+//     red: "bg-red-600",
+//     yellow: "bg-yellow-600",
+//     purple: "bg-purple-600",
+//   };
 
-  return (
-    <div className="w-full">
-      {label && (
-        <div className="text-sm font-medium text-gray-700 mb-2">{label}</div>
-      )}
-      <div className="w-full bg-gray-200 rounded-full h-3">
-        <div
-          className={`h-3 rounded-full transition-all duration-500 ${colors[color]}`}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        ></div>
-      </div>
-      <div className="text-sm text-gray-600 mt-1">{percentage}%</div>
-    </div>
-  );
-};
+//   return (
+//     <div className="w-full">
+//       {label && (
+//         <div className="text-sm font-medium text-gray-700 mb-2">{label}</div>
+//       )}
+//       <div className="w-full bg-gray-200 rounded-full h-3">
+//         <div
+//           className={`h-3 rounded-full transition-all duration-500 ${colors[color]}`}
+//           style={{ width: `${Math.min(percentage, 100)}%` }}
+//         ></div>
+//       </div>
+//       <div className="text-sm text-gray-600 mt-1">{percentage}%</div>
+//     </div>
+//   );
+// };
 
 // Skills Input Component
 const SkillInput = ({
@@ -545,6 +545,78 @@ const Dashboard = ({ userSkills, analysisResults }) => {
   );
 };
 
+const readinessRanges = [
+  { min: 0, max: 20, label: "Very Low", color: "#ef4444" }, // red
+  { min: 20, max: 40, label: "Low", color: "#f97316" }, // orange
+  { min: 40, max: 70, label: "Medium", color: "#eab308" }, // yellow
+  { min: 70, max: 100, label: "High", color: "#22c55e" }, // green
+];
+
+const ProgressBar2 = ({ percentage }) => {
+  return (
+    <div className="w-full">
+      {/* User Percentage */}
+      {/* <div className="mt-1 text-right text-sm font-medium text-gray-800">
+        {percentage}% Readiness
+      </div> */}
+
+      {/* Main Bar */}
+      <div className="relative w-full h-3.5 rounded bg-gray-200 flex overflow-hidden">
+        {readinessRanges.map((range, i) => {
+          const width = range.max - range.min;
+          return (
+            <div
+              key={i}
+              style={{
+                width: `${width}%`,
+                backgroundColor: range.color,
+              }}
+            />
+          );
+        })}
+
+        {/* Filled bar (from 0 up to user readiness) */}
+        <div
+          className=" absolute top-0  h-1/2 bg-black opacity-50 rounded-l transform -translate-y-1/2"
+          style={{ width: `${percentage}%` }}
+        />
+
+        {/* Arrow pointer icon */}
+        <div
+          className="absolute pt-1  top-1/2 transform -translate-y-1/2"
+          style={{ left: `calc(${percentage}% - 8px)` }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text-white"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            {/* Arrow shape */}
+            <path d="M12 2L19 12H5L12 2Z" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Range Labels */}
+      <div className="flex justify-between mt-2 text-xs text-gray-700">
+        {readinessRanges.map((range, i) => (
+          <div
+            key={i}
+            className="text-center"
+            style={{ width: `${range.max - range.min}%` }}
+          >
+            <div className="font-bold">{range.label}</div>
+            {/* <div className="text-gray-500">
+              {range.min}–{range.max}
+            </div> */}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Gap Analysis Results Component
 const GapAnalysisResults = ({ results }) => {
   if (!results) return null;
@@ -552,18 +624,18 @@ const GapAnalysisResults = ({ results }) => {
   const { targetOccupation, gapAnalysis, careerPathway, learningPath } =
     results;
 
-  const getReadinessColor = (level) => {
-    switch (level) {
-      case "high":
-        return "green";
-      case "medium":
-        return "yellow";
-      case "low":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
+  // const getReadinessColor = (level) => {
+  //   switch (level) {
+  //     case "high":
+  //       return "green";
+  //     case "medium":
+  //       return "yellow";
+  //     case "low":
+  //       return "red";
+  //     default:
+  //       return "gray";
+  //   }
+  // };
 
   const getReadinessIcon = (level) => {
     switch (level) {
@@ -582,16 +654,16 @@ const GapAnalysisResults = ({ results }) => {
     <div className="space-y-8">
       {/* Target Occupation Header */}
       <div className="bg-green-700 text-white rounded-lg p-6">
-        <div className="flex items-center space-x-3 mb-3">
-          <Target size={28} />
+        {/* <div className="flex items-center space-x-3 mb-3">
+          <Target size={22} />
           <h2 className="text-2xl font-bold">Analysis Results</h2>
-        </div>
+        </div> */}
         <div className="text-lg">
           Target: <span className="font-semibold">{targetOccupation.name}</span>
         </div>
-        {targetOccupation.code && (
+        {/* {targetOccupation.code && (
           <div className="text-blue-100">Code: {targetOccupation.code}</div>
-        )}
+        )} */}
       </div>
 
       {/* Readiness Score */}
@@ -599,13 +671,13 @@ const GapAnalysisResults = ({ results }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             {getReadinessIcon(gapAnalysis.readinessLevel)}
-            <h3 className="text-xl font-bold">Readiness Assessment</h3>
+            <h3 className="text-xl font-bold">Readiness</h3>
           </div>
           <div className="text-3xl font-bold text-gray-800">
             {gapAnalysis.readinessScore}%
           </div>
         </div>
-
+        {/* 
         <ProgressBar
           percentage={gapAnalysis.readinessScore}
           color={getReadinessColor(gapAnalysis.readinessLevel)}
@@ -613,7 +685,9 @@ const GapAnalysisResults = ({ results }) => {
             gapAnalysis.readinessLevel.charAt(0).toUpperCase() +
             gapAnalysis.readinessLevel.slice(1)
           } Readiness`}
-        />
+        /> */}
+
+        <ProgressBar2 percentage={gapAnalysis.readinessScore} />
 
         <div className="mt-4 p-4 bg-blue-50 rounded-lg">
           <div className="font-medium text-blue-900">Recommendation:</div>
@@ -690,7 +764,8 @@ const GapAnalysisResults = ({ results }) => {
             <h3 className="text-lg font-bold">Learning Path</h3>
           </div>
 
-          <div className="grid md:grid-cols-3  gap-4 mb-4">
+          <div className="grid md:grid-cols-5 gap-4 mb-4">
+            {/* Total Skills */}
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {learningPath.totalSkillsToLearn}
@@ -698,49 +773,97 @@ const GapAnalysisResults = ({ results }) => {
               <div className="text-sm text-gray-600">Skills to Learn</div>
             </div>
 
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
-                {learningPath.estimatedTime}
+            {/* Critical Est. Time */}
+            <div className="text-center p-4 bg-red-50 rounded-lg">
+              <div className="text-2xl font-bold text-red-600">
+                {learningPath.criticalEstTime}
               </div>
-              <div className="text-sm text-gray-600">Estimated Time</div>
+              <div className="text-sm text-gray-600">Critical Time</div>
             </div>
 
+            {/* Critical Skills Count */}
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
-                {learningPath.priorities?.length || 0}
+                {learningPath.criticalSkills.length}
               </div>
-              <div className="text-sm text-gray-600">Priority Skills</div>
+              <div className="text-sm text-gray-600">Critical Skills</div>
+            </div>
+
+            {/* Optional Skills Count */}
+            <div className="text-center p-4 bg-orange-50 rounded-lg">
+              <div className="text-2xl font-bold text-orange-600">
+                {learningPath.optionalSkills.length}
+              </div>
+              <div className="text-sm text-gray-600">Optional Skills</div>
+            </div>
+
+            {/* Optional Est. Time */}
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">
+                {learningPath.optionalEstTime}
+              </div>
+              <div className="text-sm text-gray-600">Optional Time</div>
             </div>
           </div>
 
-          {learningPath.priorities && learningPath.priorities.length > 0 && (
+          {/* Top Priority Skills */}
+          {learningPath.totalSkillsToLearn > 0 && (
             <div className="space-y-2">
               <h4 className="font-medium text-gray-800">
-                Top Priority Skills:
+                Top Skills to Learn:
               </h4>
-              <div className="grid gap-2">
-                {learningPath.priorities.slice(0, 5).map((skill, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-                  >
-                    <div>
-                      <div className="font-medium">{skill.PREFERREDLABEL}</div>
-                      <div className="text-sm text-gray-600">
-                        {skill.reasoning}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Left side = Critical */}
+                <div>
+                  <h5 className="text-red-600 font-semibold mb-2">Critical</h5>
+                  {learningPath.criticalSkills
+                    .slice(0, 5)
+                    .map((skill, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                      >
+                        <div>
+                          <div className="font-medium">
+                            {skill.PREFERREDLABEL}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {skill.reasoning}
+                          </div>
+                        </div>
+                        <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
+                          {skill.priority}
+                        </span>
                       </div>
-                    </div>
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        skill.priority === "critical"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-orange-100 text-orange-800"
-                      }`}
-                    >
-                      {skill.priority}
-                    </span>
-                  </div>
-                ))}
+                    ))}
+                </div>
+
+                {/* Right side = Optional */}
+                <div>
+                  <h5 className="text-orange-600 font-semibold mb-2">
+                    Optional
+                  </h5>
+                  {learningPath.optionalSkills
+                    .slice(0, 5)
+                    .map((skill, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                      >
+                        <div>
+                          <div className="font-medium">
+                            {skill.PREFERREDLABEL}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {skill.reasoning}
+                          </div>
+                        </div>
+                        <span className="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">
+                          {skill.priority}
+                        </span>
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           )}
@@ -765,7 +888,7 @@ const GapAnalysisResults = ({ results }) => {
             </div>
 
             <div className="space-y-3">
-              {careerPathway.steppingStones.slice(0, 2).map((stone, index) => (
+              {careerPathway.steppingStones.slice(0, 3).map((stone, index) => (
                 <div
                   key={index}
                   className="flex items-center space-x-4 p-3 border border-gray-200 rounded-lg"
@@ -986,7 +1109,7 @@ const SkillsExplorer = () => {
   );
 };
 
-// // Career Pathway Visualizer Component
+// Career Pathway Visualizer Component
 const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
   const [pathwayData, setPathwayData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -1007,10 +1130,9 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
           method: "POST",
           body: JSON.stringify({ userSkills, targetOccupation }),
         });
-
         setPathwayData(response);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -1019,6 +1141,7 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
     fetchPathway();
   }, [userSkills, targetOccupation]);
 
+  // --- States ---
   if (!userSkills.length || !targetOccupation) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -1061,16 +1184,30 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
     );
   }
 
+  // --- Data Mapping ---
   const { pathway } = pathwayData;
+  const mappedStones = pathway.steppingStones.map((stone) => ({
+    occupation: {
+      name: stone.occupation.PREFERREDLABEL,
+      description: stone.occupation.description,
+    },
+    readiness: stone.currentReadiness,
+    skillsGained: stone.skillsTowardTarget,
+    progressValue: stone.progressTowardTarget,
+    newSkills: stone.newSkillsGained,
+    timeEstimate: stone.timeEstimate,
+  }));
 
+  // --- UI ---
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center space-x-2 mb-6">
         <TrendingUp className="text-purple-600" size={24} />
-        <h3 className="text-xl font-bold">Career Pathway Visualization</h3>
+        <h3 className="text-xl font-bold">Career Pathway Results</h3>
       </div>
 
       {pathway.directPath ? (
+        // ✅ Direct Path
         <div className="text-center py-12">
           <CheckCircle className="text-green-600 mx-auto mb-4" size={64} />
           <h4 className="text-xl font-bold text-green-800 mb-2">
@@ -1079,23 +1216,11 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
           <p className="text-green-700 max-w-md mx-auto">
             {pathway.recommendation}
           </p>
-
-          <div className="mt-6 p-4 bg-green-50 rounded-lg">
-            <h5 className="font-medium text-green-800 mb-2">
-              You're Ready To:
-            </h5>
-            <ul className="text-green-700 text-sm space-y-1">
-              <li className="font-bold">
-                • Apply directly to {targetOccupation} positions
-              </li>
-              <li>• Start building a portfolio in this field</li>
-              <li>• Network with professionals in this area</li>
-              <li>• Look for entry-level opportunities</li>
-            </ul>
-          </div>
         </div>
       ) : (
+        // 🔹 Stepping Stones Path
         <div className="space-y-6">
+          {/* Strategy */}
           <div className="bg-purple-50 rounded-lg p-4">
             <div className="font-medium text-purple-900">
               Recommended Strategy:
@@ -1103,13 +1228,13 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
             <div className="text-purple-800">{pathway.recommendation}</div>
           </div>
 
-          {pathway.steppingStones && pathway.steppingStones.length > 0 && (
+          {mappedStones.length > 0 && (
             <div className="space-y-4">
               <h4 className="font-semibold text-gray-800">
                 Your Career Pathway:
               </h4>
 
-              {/* Current Position */}
+              {/* Current position */}
               <div className="flex items-center mb-4">
                 <div className="flex-shrink-0 w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center font-bold">
                   NOW
@@ -1122,8 +1247,8 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                 </div>
               </div>
 
-              {/* Stepping Stones */}
-              {pathway.steppingStones.map((stone, index) => (
+              {/* Stepping stones */}
+              {mappedStones.map((stone, index) => (
                 <div key={index} className="relative">
                   <div className="flex items-center mb-4">
                     <div className="flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
@@ -1149,6 +1274,19 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                         {stone.occupation.description}
                       </p>
 
+                      {/* Readiness bar with arrow */}
+                      <div className="relative w-full h-3 bg-gray-200 rounded mb-3">
+                        <div
+                          className="absolute top-1/2 left-0 h-2 bg-blue-900 transform -translate-y-1/2"
+                          style={{
+                            width: `${stone.readiness}%`,
+                            clipPath:
+                              "polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%)",
+                          }}
+                        />
+                      </div>
+
+                      {/* Skills summary */}
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex items-center space-x-2">
                           <Zap className="text-purple-600" size={14} />
@@ -1164,22 +1302,21 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                         </div>
                       </div>
 
-                      {stone.newSkills && stone.newSkills.length > 0 && (
+                      {/* New skills */}
+                      {stone.newSkills?.length > 0 && (
                         <div className="mt-3">
                           <div className="text-sm font-medium text-purple-800 mb-2">
                             Skills you'll gain:
                           </div>
                           <div className="flex flex-wrap gap-1">
-                            {stone.newSkills
-                              .slice(0, 4)
-                              .map((skill, skillIndex) => (
-                                <span
-                                  key={skillIndex}
-                                  className="bg-white text-purple-700 px-2 py-1 rounded text-xs border border-purple-200"
-                                >
-                                  {skill.name}
-                                </span>
-                              ))}
+                            {stone.newSkills.slice(0, 4).map((skill, i) => (
+                              <span
+                                key={i}
+                                className="bg-white text-purple-700 px-2 py-1 rounded text-xs border border-purple-200"
+                              >
+                                {skill.name}
+                              </span>
+                            ))}
                             {stone.newSkills.length > 4 && (
                               <span className="text-purple-600 text-xs px-2 py-1">
                                 +{stone.newSkills.length - 4} more
@@ -1192,13 +1329,13 @@ const CareerPathwayVisualizer = ({ userSkills, targetOccupation }) => {
                   </div>
 
                   {/* Connection line */}
-                  {index < pathway.steppingStones.length - 1 && (
+                  {index < mappedStones.length - 1 && (
                     <div className="absolute left-5 w-0.5 h-6 bg-purple-300"></div>
                   )}
                 </div>
               ))}
 
-              {/* Final Target */}
+              {/* Final target */}
               <div className="flex items-center">
                 <div className="flex-shrink-0 w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center">
                   <Target size={18} />
@@ -1688,8 +1825,8 @@ const SkillsGapAnalyzerApp = () => {
     { id: "dashboard", label: "Current Status", icon: BarChart3 },
     { id: "pathway", label: "Career Pathway", icon: TrendingUp },
     { id: "resources", label: "Learning Resources", icon: BookOpen },
-    { id: "explorer", label: "Skills Explorer", icon: Search },
     { id: "similar", label: "Similar Occupations", icon: Users },
+    { id: "explorer", label: "Skills Explorer", icon: Search },
   ];
 
   const performAnalysis = async () => {
@@ -2049,7 +2186,10 @@ const SkillsGapAnalyzerApp = () => {
           <div className="grid md:grid-cols-4 gap-10">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <Target size={24} className="text-green-500" />
+                <Target
+                  size={28}
+                  className="text-gray-200 bg-green-600 border-12"
+                />
                 <span className="text-xl font-bold">JobWeave</span>
               </div>
               <p className="text-gray-400 mb-4">
@@ -2058,11 +2198,12 @@ const SkillsGapAnalyzerApp = () => {
                 current skills to your dream career.
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <span>•</span>
                 <span>Tabiya Challenge 2</span>
                 <span>•</span>
-                <span>React + Express.js</span>
+                <span>Open Source Data </span>
                 <span>•</span>
-                <span>Open Source Data</span>
+                <span>Tabiya Inclusive Taxonomy</span>
               </div>
             </div>
 
